@@ -1,6 +1,6 @@
 {
   "name": "@wadahkode/server",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "library for wadahkode",
   "main": "./app.js",
   "directories": {
