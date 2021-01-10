@@ -10,7 +10,7 @@ app.get('/', (req,res) => {
     new Date(),
     req.url
   );
-  res.end('Hello');
+  res.render('index', {title: 'Salam koding'});
 });
 
 app.listen(port);
