@@ -47,7 +47,7 @@ class Handler {
     });
   }
   
-  settings(options: []) {
+  settings(options: any) {
     if (options.hasOwnProperty('views')) {
       this.views = options['views'];
     }
