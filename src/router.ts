@@ -40,6 +40,13 @@ exports.missing = function(req: any) {
       res.writeHead(404, {'Content-Type': 'text/plain'});
       res.write("No route registered for " + url.pathname);
       res.end();
+      console.log(
+        '🌏 %s %s %s %s',
+        req.method,
+        res.statusCode,
+        new Date(),
+        req.url
+      );
     });      
   }  
 };

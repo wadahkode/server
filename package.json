@@ -13,6 +13,7 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc -w",
+    "postInstall": "npm run build",
     "test": "nodemon ./tests/server.js"
   },
   "author": "wadahkode <mvp.dedefilaras@gmail.com>",
