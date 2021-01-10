@@ -6,6 +6,7 @@
   "directories": {
     "test": "tests"
   },
+  "repository": "https://github.com/wadahkode/server.git",
   "scripts": {
     "build": "tsc",
     "start": "tsc -w",
