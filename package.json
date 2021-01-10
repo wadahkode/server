@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "library for wadahkode",
   "main": "./app.js",
+  "private": false,
   "directories": {
     "test": "tests"
   },
-  "repository": "https://github.com/wadahkode/server.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wadahkode/server.git"
+  },
   "scripts": {
     "build": "tsc",
     "start": "tsc -w",
