@@ -9,11 +9,13 @@ const router = require('./router');
  */
 class Wadahkode {
   private server: any;
+  private settings: Array<string> = [];
   
   constructor() {
     this.server = http.createServer((req: any, res: any) => {
       const handler = router.route(req);
       handler.process(req,res);
+      handler.settings(this.settings);
     });
   }
   
@@ -29,6 +31,10 @@ class Wadahkode {
     this.server.listen(port, () => {
       console.log('Server berjalan di http://127.0.0.1:' + port);
     });
+  }
+  
+  set(name: any, value: string) {
+    this.settings[name] = value;
   }
 }
 

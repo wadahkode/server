@@ -23,8 +23,7 @@ class Handler {
   }
   
   render(view: string, data: any, response: any) {
-    this.settings();
-    
+    //this.settings();
     let filename: string = pathHandler.join(
       this.views,
       view + '.ejs'
@@ -48,11 +47,10 @@ class Handler {
     });
   }
   
-  settings() {
-    this.views = pathHandler.join(
-      pathHandler.dirname(__dirname),
-      'views'
-    );
+  settings(options: []) {
+    if (options.hasOwnProperty('views')) {
+      this.views = options['views'];
+    }
   }
 }
 
