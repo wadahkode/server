@@ -1,1 +1,1 @@
-module.exports = require('./build/wadahkode');
+module.exports = require('./lib/wadahkode');

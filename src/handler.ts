@@ -1,5 +1,4 @@
-const pathHandler = require('path');
-const ejs = require('ejs');
+const View = require('./view');
 
 /**
  * Kelas Handler
@@ -23,28 +22,9 @@ class Handler {
   }
   
   render(view: string, data: any, response: any) {
-    //this.settings();
-    let filename: string = pathHandler.join(
-      this.views,
-      view + '.ejs'
-    );
+    let fileName: string = View.set(this.views, view + '.ejs');
     
-    ejs.delimiter = '%';
-    ejs.renderFile(filename, data, function(err: any, str: any){
-      if (err) {
-        response.writeHead(404, {
-          'Content-Type': 'text/plain'
-        });
-        response.write(`${filename} tidak dapat ditemukan!`);
-        response.end();
-      } else {
-        response.writeHead(200, {
-          'Content-Type': 'text/html'
-        });
-        response.write(str);
-        response.end();
-      }
-    });
+    return View.render(fileName, data, response);
   }
   
   settings(options: any) {
