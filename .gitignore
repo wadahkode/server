@@ -3,3 +3,5 @@ node_modules
 .npmrc
 #lib
 views
+src
+tests
