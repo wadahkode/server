@@ -1,4 +1,4 @@
-const wadahkode = require('../build/wadahkode'),
+const wadahkode = require('../lib/wadahkode'),
   app = wadahkode(),
   path = require('path'),
   port = process.env.PORT || 3000;
@@ -13,7 +13,10 @@ app.get('/', (req,res) => {
     new Date(),
     req.url
   );
-  res.render('index', {title: 'Salam koding'});
+  res.render('index', {
+    title: 'Server',
+    description: 'Salam koding'
+  });
 });
 
 app.get('/about', (req,res) => {
@@ -24,7 +27,10 @@ app.get('/about', (req,res) => {
     new Date(),
     req.url
   );
-  res.render('about', {title: 'Salam koding'});
+  res.render('about', {
+    title: 'Server',
+    description: 'Tentang kami'
+  });
 });
 
 app.listen(port);

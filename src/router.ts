@@ -24,18 +24,40 @@ exports.route = function(req: any) {
 };
 
 exports.missing = function(req: any) {
-  // Try to read the file locally, this is a security hole, yo /../../etc/passwd
   let url: any = parser.parse(req.url, true);
-  let path: string = __dirname + "/public" + url.pathname;
+  let filepath: string = __dirname + "/public" + url.pathname;
+  let extname: string = String(path.extname(filepath)).toLowerCase();
+  let mimeTypes: any = {
+    '.html': 'text/html',
+    '.js': 'text/javascript',
+    '.css': 'text/css',
+    '.ico': 'image/x-icon',
+    '.json': 'application/json',
+    '.png': 'image/png',
+    '.jpg': 'image/jpg',
+    '.gif': 'image/gif',
+    '.svg': 'image/svg+xml',
+    '.wav': 'audio/wav',
+    '.mp4': 'video/mp4',
+    '.woff': 'application/font-woff',
+    '.ttf': 'application/font-ttf',
+    '.eot': 'application/vnd.ms-fontobject',
+    '.otf': 'application/font-otf',
+    '.wasm': 'application/wasm'
+  };
+  let contentType: string = mimeTypes[extname];
+  
   try {    
-    let data: any = fs.readFileSync(path);
+    let data: any = fs.readFileSync(filepath);
     let mime: string = req.headers.accepts || 'text/html';
     return handlerFactory.createHandler(function(req: any, res: any) {
-      res.writeHead(200, {'Content-Type': mime});
+      res.writeHead(200, {
+        'Content-Type': contentType
+      });
       res.write(data);
       res.close();
     });        
-  } catch (e) { 
+  } catch (e) {
     return handlerFactory.createHandler(function(req: any, res: any) {
       res.writeHead(404, {'Content-Type': 'text/plain'});
       res.write("No route registered for " + url.pathname);
@@ -48,5 +70,5 @@ exports.missing = function(req: any) {
         req.url
       );
     });      
-  }  
+  }
 };
