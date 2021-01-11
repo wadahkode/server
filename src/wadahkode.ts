@@ -14,8 +14,8 @@ class Wadahkode {
   constructor() {
     this.server = http.createServer((req: any, res: any) => {
       const handler = router.route(req);
-      handler.process(req,res);
       handler.settings(this.settings);
+      handler.process(req,res);
     });
   }
   

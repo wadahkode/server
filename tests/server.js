@@ -16,4 +16,15 @@ app.get('/', (req,res) => {
   res.render('index', {title: 'Salam koding'});
 });
 
+app.get('/about', (req,res) => {
+  console.log(
+    '🌏 %s %s %s %s',
+    req.method,
+    res.statusCode,
+    new Date(),
+    req.url
+  );
+  res.render('about', {title: 'Salam koding'});
+});
+
 app.listen(port);
