@@ -3,6 +3,6 @@ node_modules
 .npmrc
 #lib
 views
-src.backup
-tests.backup
-tsconfig.json.backup
+#src
+#tests
+#tsconfig.json
