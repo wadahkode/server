@@ -7,6 +7,7 @@
     "test": "tests"
   },
   "repository": "@wadahkode/server",
+  "homepage": "https://github.com/wadahkode/server.git",
   "scripts": {
     "build": "tsc",
     "start": "tsc -w",
