@@ -8,12 +8,12 @@ exports.clear = () => {
   handlers = {};
 };
 
-exports.get = (url: string,method: any) => {
+exports.get = (url: string, method: any) => {
   handlers[url] = handlerFactory.createHandler(method);
 };
 
-exports.post = (url: string) => {
-  
+exports.post = (url: string, method: any) => {
+  handlers[url] = handlerFactory.createHandler(method);
 };
 
 exports.route = function(req: any) {

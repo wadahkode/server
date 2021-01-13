@@ -2,8 +2,15 @@ package-lock.json
 node_modules
 .npmrc
 #lib
+<<<<<<< HEAD
 views
 src
 tests
 tsconfig.json
 public
+=======
+#views
+#src
+#tests/server.js
+tsconfig.json
+>>>>>>> master
