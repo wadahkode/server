@@ -10,6 +10,7 @@ const {createReadStream} = require('fs');
  */
 class Handler {
   public process: any;
+  public processData: any;
   public views: string = '';
   
   constructor(method: any) {
@@ -20,19 +21,44 @@ class Handler {
         if (err.code != 'ENOENT') {
           let params: any = null;
           res.render = (view: string, data: any) => this.render(view, data, res);
-          
+          res.redirect = (uri: string) => {
+            res.writeHead(301, {
+              "Cache-Control": "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0",
+              "Location": uri
+            });
+          }
           return method.apply(this, [
             req, res, params
           ]);
         } else {
           let params: any = null;
           res.render = (view: string, data: any) => this.render(view, data, res);
-          
+          res.redirect = (uri: string) => {
+            res.writeHead(301, {
+              "Cache-Control": "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0",
+              "Location": uri
+            });
+          }
           return method.apply(this, [
             req, res, params
           ]);
         }
       });
+    };
+    
+    this.processData = function(req: any, res: any){
+      let params: any = null;
+      res.render = (view: string, data: any) => this.render(view, data, res);
+      res.redirect = (uri: string) => {
+        //res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+        res.writeHead(301, {
+          "Cache-Control": "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0",
+          "Location": uri
+        });
+      }
+      return method.apply(this, [
+        req, res, params
+      ]);
     };
   }
   

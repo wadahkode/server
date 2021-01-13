@@ -3,6 +3,6 @@ node_modules
 .npmrc
 lib
 views
-src
-tests
+#src
+tests/server.js
 tsconfig.json
