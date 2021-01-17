@@ -3,9 +3,11 @@
   "version": "1.1.1",
   "description": "library for wadahkode",
   "main": "./app.js",
-  "directories": {
-    "test": "tests"
-  },
+  "files": [
+    "LICENSE",
+    "app.js",
+    "lib/"
+  ],
   "repository": "https://github.com/wadahkode/server.git",
   "homepage": "https://github.com/wadahkode/server.git",
   "scripts": {
@@ -16,12 +18,14 @@
   },
   "author": "wadahkode <mvp.dedefilaras@gmail.com>",
   "license": "MIT",
-  "devDependencies": {
-    "@types/node": "^14.14.20",
-    "ejs": "^3.1.5",
-    "typescript": "^4.1.3"
-  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
+  },
+  "dependencies": {
+    "@types/node": "^14.14.21",
+    "ejs": "^3.1.5",
+    "jsdom": "^16.4.0",
+    "jsdom-global": "^3.0.2",
+    "typescript": "^4.1.3"
   }
 }
