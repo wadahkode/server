@@ -1,66 +1,46 @@
-const http = require('http');
-const router = require('./router');
-const qs = require('querystring');
-
+const app = require('./v2/app'),
 /**
- * Kelas utama
+ * Fungsi Wadahkode
+ * 
+ * Sebuah fungsi yang digunakan untuk menampung sebuah fungsi lain.
  * 
  * @author wadahkode <mvp.dedefilaras@gmail.com>
  * @since version 1.0.0
  */
-class Wadahkode {
-  private server: any;
-  private settings: Array<string> = [];
-  
-  constructor() {
-    this.server = http.createServer((req: any, res: any) => {
-      const handler = router.route(req);
-      handler.settings(this.settings);
-      
-      if (req.url != '/') {
-        switch (req.method) {
-          case 'GET': handler.process(req,res); break;
-          case 'POST': handler.processData(req,res); break;
-        }
-      } else {
-        handler.process(req,res);
-      }
-    });
-  }
-  
-  form(req: any, method: any) {
-    let body: string = '';
-    req.setEncoding('utf-8');
+wadahkode = () => {
+  /**
+   * Metode atau properti yang digunakan ketika
+   * web server dimuat dengan app.listen(arguments),
+   * 
+   * Secara otomatis menampung request dan response dari server,
+   * dan mencari router yang cocok berdasarkan request methodnya.
+   * 
+   * @since version 1.0.0
+   */
+  app.handle = (req: any, res: any) => {
+    const route = app.route(req);
     
-    try {
-      req.on('data', (chunk: any) => body += chunk);
-      req.on('end', () => {
-        let data: Array<any> = qs.parse(body);
-        
-        return method(null, data);
-      });
-    } catch(e) {
-      req.on('error', (error: any) => method(error, null));
+    if (req.method == 'GET') {
+      route.get(req, res);
+      
+      console.log(
+        '🌏 %s %s %s %s',
+        req.method,
+        res.statusCode,
+        new Date(),
+        req.url
+      );
+    } else if (req.method == 'POST') {
+      return route.post();
     }
-  }
+  };
   
-  get(url: string, method: any) {
-    router.get(url,method);
-  }
+  // untuk menampung router
+  // misalnya: ['/': [Function]]
+  app.register = {};
   
-  post(url: string, method: any) {
-    router.post(url, method);
-  }
-  
-  listen(port: number) {
-    this.server.listen(port, () => {
-      console.log('Server berjalan di http://127.0.0.1:' + port);
-    });
-  }
-  
-  set(name: any, value: string) {
-    this.settings[name] = value;
-  }
-}
+  // Kembalikan
+  return app;
+};
 
-module.exports = () => new Wadahkode();
+module.exports = wadahkode;
