@@ -1,16 +1,18 @@
 const wadahkode = require('../../'),
   app = wadahkode(),
+  path = require('path'),
   port = process.env.PORT || 3000;
 
 app.use({
-  'views': app.dirname('views'),
-  'engine': 'ejs'
+  'engine': 'ejs',
+  'public': path.join(__dirname, 'public'),
+  'views': path.join(__dirname, 'views')
 });
 
 app.get('/', (req, res) => {
-  res.render('test', {
-    title: 'Test',
-    description: 'Hello world'
+  res.render('index', {
+    title: 'Wadahkode',
+    description: 'Cintai Produk Indonesia'
   });
 });
 

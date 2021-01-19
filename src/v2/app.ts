@@ -78,7 +78,9 @@ module.exports = {
   
   missing: function(req: any) {
     const url: any = parse(req.url, true),
-      filepath: string = join(resolve('public'), url.pathname),
+      filepath: string = settings.hasOwnProperty('public')
+        ? join(settings.public, url.pathname)
+        : join(resolve('public'), url.pathname),
       extension: string = String(extname(filepath)).toLowerCase(),
       mimeTypes: any = {
         '.html': 'text/html',
