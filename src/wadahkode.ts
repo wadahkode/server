@@ -39,6 +39,8 @@ wadahkode = () => {
   // misalnya: ['/': [Function]]
   app.register = {};
   
+  app.Router = app;
+  
   // Kembalikan
   return app;
 };

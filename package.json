@@ -15,7 +15,8 @@
     "build": "tsc",
     "start": "tsc -w",
     "postInstall": "npm run build",
-    "hello": "nodemon ./examples/hello-world/index.js"
+    "hello": "nodemon ./examples/hello-world/index.js",
+    "blog": "nodemon ./examples/blog/index.js"
   },
   "author": "wadahkode <mvp.dedefilaras@gmail.com>",
   "license": "MIT",

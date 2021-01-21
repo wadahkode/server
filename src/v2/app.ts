@@ -43,7 +43,7 @@ module.exports = {
           let viewpath: string = settings.hasOwnProperty('views') ? settings.views : resolve('views'),
             engine: string = settings.hasOwnProperty('engine') ? settings.engine : 'ejs',
             stats: any = lstatSync(join(resolve('node_modules'), engine));
-            filename = join(viewpath, filename + '.' + engine);
+            filename = join(viewpath, filename + (settings['view extension'] || '.ejs'));
         
           const View = new view({
             filename,
@@ -123,9 +123,13 @@ module.exports = {
     }
   },
   
-  use: function(params: any) {
-    for (let key in params) {
-      settings[key] = params[key];
-    }
+  use: function(...params: any) {
+    params.reduce(function(key: string, value: any){
+      settings[key] = value;
+    });
+    // for (let key in params) {
+    //   if (key === 'router') require(params[key]);
+    //   settings[key] = params[key];
+    // }
   }
 };

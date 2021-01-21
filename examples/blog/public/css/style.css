@@ -1,0 +1,53 @@
+
+
+body, h1, h2, h3, h4, h5, h6, ul {
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  display: flex;
+}
+
+nav .container {
+  display: flex;
+  flex: 1 1;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 7px;
+}
+
+nav .container .to-left {
+  flex: 1;
+  justify-content: flex-start;
+}
+
+nav .container .to-left .brand {
+  font-size: 18pt;
+  padding: 7px;
+}
+
+nav .container .to-right {
+  flex: 1;
+  justify-content: flex-end;
+}
+
+nav .container .to-right ul {
+  display: flex;
+  list-style: none;
+}
+nav .container .to-right ul li {
+  padding: 7px;
+}
+
+a {
+  text-decoration: none;
+}
+
+main {
+  padding: 0 7px;
+}
+
+.mt-3 {
+  margin-top: 12px;
+}
