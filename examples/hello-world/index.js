@@ -3,11 +3,10 @@ const wadahkode = require('../../'),
   path = require('path'),
   port = process.env.PORT || 3000;
 
-app.use({
-  'engine': 'ejs',
-  'public': path.join(__dirname, 'public'),
-  'views': path.join(__dirname, 'views')
-});
+app.use('engine', 'ejs');
+//app.use('view extension', '.html');
+app.use('public', path.join(__dirname, 'public'));
+app.use('views', path.join(__dirname, 'views'));
 
 app.get('/', (req, res) => {
   res.render('index', {
