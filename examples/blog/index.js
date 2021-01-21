@@ -8,7 +8,6 @@ app.use('engine', 'ejs');
 //app.use('view extension', '.html');
 app.use('public', path.join(__dirname, 'public'));
 app.use('views', path.join(__dirname, 'views'));
-app.use('bodyParser', {extended: false});
 app.use('/', indexRouter);
 
 app.listen(port, () => {
