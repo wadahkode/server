@@ -24,10 +24,9 @@ Router.get('/about', (req, res) => {
 
 // Halaman administrator
 Router.get('/admin', (req, res) => {
-  if (session.has('superuser')) {
-    res.redirect('/admin/dashboard');
-  }
-  res.render('admin/index', {title: 'Blog'});
+  return session.has('superuser')
+    ? res.redirect('/admin/dashboard')
+    : res.render('admin/index', {title: 'Blog'});
 });
 
 // Admin Sign-in
@@ -46,15 +45,14 @@ Router.post('/admin/signin', (req, res) => {
 
 // Dashboard
 Router.get('/admin/dashboard', (req, res) => {
-  if (!session.has('superuser')) {
-    res.redirect('/admin');
-  }
-  res.render('admin/dashboard', {
-    title: 'Blog',
-    data: [{
-      name: session.get('superuser')
-    }]
-  });
+  return !session.has('superuser')
+    ? res.redirect('/admin')
+    : res.render('admin/dashboard', {
+      title: 'Blog',
+      data: [{
+        name: session.get('superuser')
+      }]
+    });
 });
 
 module.exports = Router;
