@@ -31,7 +31,15 @@ wadahkode = () => {
         req.url
       );
     } else if (req.method == 'POST') {
-      return route.post();
+      route.post(req, res);
+      
+      console.log(
+        '🌏 %s %s %s %s',
+        req.method,
+        res.statusCode,
+        new Date(),
+        req.url
+      );
     }
   };
   
@@ -39,7 +47,10 @@ wadahkode = () => {
   // misalnya: ['/': [Function]]
   app.register = {};
   
-  app.Router = app;
+  app.Router = {
+    get: (path: string, callback: any) => app.get(path, callback),
+    post: (path: string, callback: any) => app.post(path, callback),
+  };
   
   // Kembalikan
   return app;

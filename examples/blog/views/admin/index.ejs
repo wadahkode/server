@@ -1,0 +1,16 @@
+<%- include('../partials/head') -%>
+  <main class="mt-3">
+    <h1>Silahkan masuk untuk melanjutkan kehalaman utama.</h1>
+    <form class="mt-3" action="/admin/signin" method="post" accept-charset="utf-8">
+      <div>
+        <input type="text" name="username" placeholder="nama pengguna" required/>
+      </div>
+      <div>
+        <input type="password" name="password" placeholder="kata sandi" required/>
+      </div>
+      <div>
+        <button type="submit">masuk</button>
+      </div>
+    </form>
+  </main>
+<%- include('../partials/footer') -%>

@@ -12,6 +12,8 @@ module.exports = {
   },
   
   get: function(path: string, method: any) {
+    this.requestMethod = String(this.get.name).toUpperCase();
+    
     this.register[path] = this.getRouter(method);
   },
   
@@ -30,6 +32,8 @@ module.exports = {
   },
   
   getRouter: function(method: any) {
+    const app = this;
+    
     return {
       // Memproses metode GET
       get: function(req: any, res: any) {
@@ -69,10 +73,52 @@ module.exports = {
           });
         };
         
+        // if (app.requestMethod != req.method) return app.missingRequestMethod.apply(this, [req, res]);
+        
         return method.apply(this, [req, res]);
       },
       // Memproses metode POST
-      post: function() {}
+      post: function(req: any, res: any) {
+        res.redirect = (url: string) => {
+          res.writeHead(301, {
+            'Location': url
+          });
+          res.end();
+        };
+        res.render = (filename: string, data: any, options: any) => {
+          let viewpath: string = settings.hasOwnProperty('views') ? settings.views : resolve('views'),
+            engine: string = settings.hasOwnProperty('engine') ? settings.engine : 'ejs',
+            stats: any = lstatSync(join(resolve('node_modules'), engine));
+            filename = join(viewpath, filename + (settings['view extension'] || '.ejs'));
+        
+          const View = new view({
+            filename,
+            engine: stats.isDirectory() ? require(engine) : false,
+            path: viewpath,
+            data: data == null ? {} : data,
+            options: options == null ? {delimiter: '%'} : options
+          });
+          
+          return View.render((err: any, str: any) => {
+            if (!err) {
+              res.write(str);
+              res.end();
+            } else {
+              if (err.code == 'ENOENT') {
+                res.write(filename + ' tidak dapat ditemukan!');
+                res.end();
+              } else {
+                res.write(err.toString());
+                res.end();
+              }
+            }
+          });
+        };
+        
+        if (app.requestMethod != req.method && req.method == 'POST') return app.missingRequestMethod.apply(this, [req, res]);
+        
+        return method.apply(this, [req, res]);
+      },
     };
   },
   
@@ -117,10 +163,23 @@ module.exports = {
         res.writeHead(400, {
           'Content-Type': 'text/plain'
         });
-        res.write('No route registered for ' + url.pathname);
+        res.write('[' + req.method + '] No route registered for ' + url.pathname);
         res.end();
       });
     }
+  },
+  
+  missingRequestMethod: function(req: any, res: any) {
+    res.writeHead(400, {
+      'Content-Type': 'text/plain'
+    });
+    res.write('Router [' + req.method + '] diperlukan untuk menangani permintaan url: ' + req.url);
+    res.end();
+  },
+  
+  post: function(path: string, method: any) {
+    this.requestMethod = String(this.post.name).toUpperCase();
+    this.register[path] = this.getRouter(method);
   },
   
   use: function(...params: any) {
