@@ -10,3 +10,11 @@
   <li>Session</li>
   <li>Router post handler</li>
 </ul>
+
+# Versi 1.1.5
+<ul>
+  <li>Webserver</li>
+  <li>Session</li>
+  <li>Router post handler</li>
+  <li>Fix problem session handle</li>
+</ul>

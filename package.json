@@ -3,11 +3,13 @@
   "version": "1.1.4",
   "description": "library for wadahkode",
   "main": "./app.js",
-  "keyword": [
+  "keywords": [
     "library"
   ],
   "files": [
     "LICENSE",
+    "README.md",
+    "CHANGELOG.md",
     "app.js",
     "lib/"
   ],

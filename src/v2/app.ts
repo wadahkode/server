@@ -2,17 +2,26 @@ const {createServer} = require('http'),
   {parse} = require('url'),
   {extname,join,resolve} = require('path'),
   {lstatSync, readFileSync} = require('fs'),
-  view = require('./view');
+  view = require('./view'),
+  qs = require('querystring');
   
 let settings: any = {};
 
 module.exports = {
+  bodyParser: function(req: any, callback: any) {
+    let body: string = '';
+    
+    req.setEncoding('utf-8');
+    req.on('data', (chunk: any) => body += chunk);
+    req.on('data', () => callback(qs.parse(body)));
+  },
+  
   dirname: function(directory: string) {
     return resolve(directory);
   },
   
   get: function(path: string, method: any) {
-    this.requestMethod = String(this.get.name).toUpperCase();
+    // this.requestMethod = String(this.get.name).toUpperCase();
     
     this.register[path] = this.getRouter(method);
   },
@@ -74,7 +83,6 @@ module.exports = {
         };
         
         // if (app.requestMethod != req.method) return app.missingRequestMethod.apply(this, [req, res]);
-        
         return method.apply(this, [req, res]);
       },
       // Memproses metode POST
@@ -117,7 +125,11 @@ module.exports = {
         
         if (app.requestMethod != req.method && req.method == 'POST') return app.missingRequestMethod.apply(this, [req, res]);
         
-        return method.apply(this, [req, res]);
+        app.bodyParser(req, (result: any) => {
+          req.body = result;
+          
+          return method.apply(this, [req, res]);
+        });
       },
     };
   },

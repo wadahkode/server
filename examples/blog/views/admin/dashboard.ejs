@@ -1,0 +1,9 @@
+<%- include('../partials/head') -%>
+  <main class="mt-3">
+    <div>Welcome back
+      <% data.forEach(function(user) { %>
+        <b><%= user.name %></b>
+      <% }); %>
+    </div>
+  </main>
+<%- include('../partials/footer') -%>

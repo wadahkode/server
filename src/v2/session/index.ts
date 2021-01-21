@@ -27,18 +27,20 @@ const Session = function() {
         return s.substring(sessid.length, s.length);
       }
     }
+    return "";
   };
   
   has = function(key: string) {
-    return get(key) ? true : false;
+    return get(key) != "" ? true : false;
   };
   
-  set = function(name: string, value: string, expired: number, path: string) {
+  set = function(name: string, value: string, expired: number = 1) {
     let date = new Date();
     
     date.setTime(date.getTime() + (expired * 24 * 60 * 60 * 1000));
     let expires = "expires="+date.toUTCString();
-    document.cookie = name + "=" + value + ";" + expires + ";path=" + path;
+    
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
   };
   
   return {
