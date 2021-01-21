@@ -1,6 +1,6 @@
 # Webserver dengan nodejs
 
-![Screenshoot](screenshoot.jpg)
+![Screenshoot](screenshot.jpg)
 
     $ git clone https://github.com/wadahkode/server
     $ npm install
