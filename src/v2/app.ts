@@ -63,7 +63,13 @@ module.exports = {
             engine: stats.isDirectory() ? require(engine) : false,
             path: viewpath,
             data: data == null ? {} : data,
-            options: options == null ? {delimiter: '%'} : options
+            options: options == null ? {
+              filename: filename,
+              compileDebug: false,
+              delimiter: '%',
+              message: '',
+              client: false
+            } : options
           });
           
           return View.render((err: any, str: any) => {
@@ -104,7 +110,13 @@ module.exports = {
             engine: stats.isDirectory() ? require(engine) : false,
             path: viewpath,
             data: data == null ? {} : data,
-            options: options == null ? {delimiter: '%'} : options
+            options: options == null ? {
+              filename: filename,
+              compileDebug: false,
+              delimiter: '%',
+              message: '',
+              client: false
+            } : options
           });
           
           return View.render((err: any, str: any) => {
