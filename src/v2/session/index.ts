@@ -2,13 +2,18 @@
  * Session
  */
 const Session = function() {
-  const start = function() {
+  let get: any,
+    has: any,
+    set: any,
+    start: any;
+  
+  start = function() {
     return (typeof document == 'undefined')
       ? require('jsdom-global')()
       : false;
   };
   
-  const get = function(key: string) {
+  get = function(key: string) {
     let sessid: string = key + '=',
       sess: string[] = document.cookie.split(';');
     
@@ -24,11 +29,11 @@ const Session = function() {
     }
   };
   
-  const has = function(key: string) {
+  has = function(key: string) {
     return get(key) ? true : false;
   };
   
-  const set = function(name: string, value: string, expired: number, path: string) {
+  set = function(name: string, value: string, expired: number, path: string) {
     let date = new Date();
     
     date.setTime(date.getTime() + (expired * 24 * 60 * 60 * 1000));
