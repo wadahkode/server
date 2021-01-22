@@ -1,23 +1,23 @@
 <%- include('partials/head') -%>
-  <nav class="navbar navbar-default">
-    <div class="container">
-      <div class="to-left">
-        <a href="/" class="brand"><%= title %></a>
+  <nav class="bg-gray-700 relative">
+    <div class="container p-2 flex justify-content-center...">
+      <div class="flex-auto">
+        <a href="/" class="text-white"><%= title %></a>
       </div>
-      <div class="to-right">
-        <ul>
-          <li>
-            <a href="/home">Home</a>
+      <div class="flex-1">
+        <ul class="flex ...">
+          <li class="px-2">
+            <a href="/home" class="text-white">Home</a>
           </li>
-          <li>
-            <a href="/about">About</a>
+          <li class="px-2">
+            <a href="/about" class="text-white">About</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
   
-  <main class="mt-3">
+  <main class="container mt-2 px-2">
     <h1>Index</h1>
   </main>
 <%- include('partials/footer') -%>
