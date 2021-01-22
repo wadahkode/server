@@ -1,6 +1,7 @@
 package-lock.json
 node_modules
 .npmrc
+.github
 src
 examples
 tsconfig.json
