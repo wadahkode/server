@@ -1,8 +1,12 @@
 const wadahkode = require('../../../'),
   Router = wadahkode().Router,
+  client = wadahkode().Client,
   session = require('../../../lib/v2/session')();
 
 session.start();
+client.initialize({
+  path: wadahkode().dirname('examples/blog') + '/.env',
+});
 
 Router.get('/', (req, res) => {
   res.render('index', {
@@ -31,16 +35,30 @@ Router.get('/admin', (req, res) => {
 
 // Admin Sign-in
 Router.post('/admin/signin', (req, res) => {
-  if (session.has('superuser')) {
-    res.redirect('/admin/dashboard');
-  } else {
-    if (req.body.username == 'admin' && req.body.password == 123) {
-      session.set('superuser', req.body.username);
-      res.redirect('/admin/dashboard');
+  const {db} = client.connect();
+  db.connect();
+  
+  db.query('select * from users where name=$1 and password=$2;', [req.body.username, req.body.password], (err, snapshot) => {
+    if (!err) {
+      if (snapshot.rows.length < 1) {
+        res.end('login gagal!');
+      } else {
+        res.end('login berhasil!');
+      }
     } else {
-      res.end('login gagal!');
+      db.end('Koneksi error!');
     }
-  }
+  });
+  // if (session.has('superuser')) {
+  //   res.redirect('/admin/dashboard');
+  // } else {
+  //   if (req.body.username == 'admin' && req.body.password == 123) {
+  //     session.set('superuser', req.body.username);
+  //     res.redirect('/admin/dashboard');
+  //   } else {
+  //     res.end('login gagal!');
+  //   }
+  // }
 });
 
 // Dashboard
