@@ -27,3 +27,14 @@
   <li>Fix problem session handle</li>
   <li>Test for fix vuln ejs</li>
 </ul>
+
+# Versi 1.1.5-rc2
+<ul>
+  <li>Webserver</li>
+  <li>Session</li>
+  <li>Router post handler</li>
+  <li>Fix problem session handle</li>
+  <li>Test for fix vuln ejs</li>
+  <li>add postgresql</li>
+  <li>add password hash</li>
+</ul>
