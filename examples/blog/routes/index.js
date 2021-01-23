@@ -48,6 +48,10 @@ Router.get('/admin/register', (req, res) => {
 // Admin Sign-in
 Router.post('/admin/signin', (req, res) => {
   const {db} = client.connect();
+
+  if (session.has('superuser')) {
+    res.redirect('/admin/dashboard');
+  }
   
   db.connect();
   db.query('SELECT * FROM users WHERE username=$1', [req.body.username], (err, snapshot) => {
@@ -57,7 +61,8 @@ Router.post('/admin/signin', (req, res) => {
       } else {
         for (let user of snapshot.rows) {
           if (passwordHash.verify(req.body.password, JSON.parse(user.password))) {
-            res.end('login berhasil!');
+            session.set('superuser', req.body.username);
+            res.redirect('/admin/dashboard');
           } else {
             res.end('kata sandi salah!');
           }
@@ -68,16 +73,6 @@ Router.post('/admin/signin', (req, res) => {
     }
     db.end();
   });
-  // if (session.has('superuser')) {
-  //   res.redirect('/admin/dashboard');
-  // } else {
-  //   if (req.body.username == 'admin' && req.body.password == 123) {
-  //     session.set('superuser', req.body.username);
-  //     res.redirect('/admin/dashboard');
-  //   } else {
-  //     res.end('login gagal!');
-  //   }
-  // }
 });
 // Admin Sign-up
 Router.post('/admin/signup', (req, res) => {

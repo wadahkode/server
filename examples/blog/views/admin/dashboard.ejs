@@ -1,5 +1,26 @@
 <%- include('../partials/head') -%>
-  <main class="container px-3">
+  <nav class="bg-gray-700 w-100 relative">
+    <div class="container p-3 mx-auto flex justify-between w-100 items-center">
+      <div class="">
+        <a href="/admin" class="text-white text-lg"><%= title %></a>
+      </div>
+      <div class="">
+        <ul class="flex ...">
+          <li class="px-2">
+            <a href="/admin/notification" class="text-white">notification</a>
+          </li>
+          <li class="px-2">
+            <a href="/admin/message" class="text-white">message</a>
+          </li>
+          <li class="px-2">
+            <a href="#" class="text-white">profile</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container px-3 mx-auto mt-5">
     <div>Welcome back
       <% data.forEach(function(user) { %>
         <b><%= user.name %></b>

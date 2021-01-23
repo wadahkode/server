@@ -58,18 +58,15 @@ module.exports = {
             engine: string = settings.hasOwnProperty('engine') ? settings.engine : 'ejs',
             stats: any = lstatSync(join(resolve('node_modules'), engine));
             filename = join(viewpath, filename + (settings['view extension'] || '.ejs'));
-        
+          
           const View = new view({
             filename,
             engine: stats.isDirectory() ? require(engine) : false,
             path: viewpath,
-            data: data == null ? {} : data,
-            options: options == null ? {
-              filename: filename,
-              compileDebug: false,
-              delimiter: '%',
-              message: '',
-              client: false
+            data: typeof data == undefined ? {} : data,
+            options: typeof options == undefined ? {
+              client: false,
+              strict: true
             } : options
           });
           
@@ -111,13 +108,10 @@ module.exports = {
             filename,
             engine: stats.isDirectory() ? require(engine) : false,
             path: viewpath,
-            data: data == null ? {} : data,
-            options: options == null ? {
-              filename: filename,
-              compileDebug: false,
-              delimiter: '%',
-              message: '',
-              client: false
+            data: typeof data == undefined ? {} : data,
+            options: typeof options == undefined ? {
+              client: false,
+              strict: true
             } : options
           });
           
