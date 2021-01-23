@@ -1,7 +1,7 @@
 const wadahkode = require('../../../'),
   Router = wadahkode().Router,
   client = wadahkode().Client,
-  session = require('../../../lib/v2/session')(),
+  session = require('../../../lib/session')(),
   passwordHash = require('@wadahkode/password-hash');
 
 session.start();

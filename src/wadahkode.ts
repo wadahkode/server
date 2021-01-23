@@ -1,4 +1,4 @@
-const app = require('./v2/app'),
+const app = require('./app'),
 /**
  * Fungsi Wadahkode
  * 

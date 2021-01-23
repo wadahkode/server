@@ -21,8 +21,6 @@ module.exports = {
   },
   
   get: function(path: string, method: any) {
-    // this.requestMethod = String(this.get.name).toUpperCase();
-    
     this.register[path] = this.getRouter(method);
   },
   
@@ -85,8 +83,6 @@ module.exports = {
             }
           });
         };
-        
-        // if (app.requestMethod != req.method) return app.missingRequestMethod.apply(this, [req, res]);
         return method.apply(this, [req, res]);
       },
       // Memproses metode POST
@@ -206,9 +202,5 @@ module.exports = {
     params.reduce(function(key: string, value: any){
       settings[key] = value;
     });
-    // for (let key in params) {
-    //   if (key === 'router') require(params[key]);
-    //   settings[key] = params[key];
-    // }
   }
 };
