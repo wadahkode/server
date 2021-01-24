@@ -52,31 +52,7 @@ wadahkode = () => {
     post: (path: string, callback: any) => app.post(path, callback),
   };
   
-  app.Client = {
-    initialize: function(options: any) {
-      const dotenv = require('dotenv');
-      
-      return dotenv.config(options);
-    },
-    connect: function() {
-      if (process.env.DB_DRIVER == 'postgres') {
-        const {Client} = require('pg');
-        
-        const newClient = new Client({
-          connectionString: `${process.env.DB_DRIVER}://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
-          ssl: {
-            rejectUnauthorized: false
-          }
-        });
-        
-        this.db = newClient;
-        
-        return this;
-      } else {
-        return false;
-      }
-    }
-  };
+  app.Client = require('./client');
   
   // Kembalikan
   return app;

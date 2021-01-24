@@ -1,13 +1,10 @@
 const wadahkode = require('../../../'),
   Router = wadahkode().Router,
-  client = wadahkode().Client,
   session = require('../../../lib/session')(),
-  passwordHash = require('@wadahkode/password-hash');
+  passwordHash = require('@wadahkode/password-hash'),
+  UserModel = require('../model/User');
 
 session.start();
-client.initialize({
-  path: wadahkode().dirname('examples/blog') + '/.env',
-});
 
 let salt = passwordHash.generateSalt(10),
   hashedPassword = "";
@@ -47,32 +44,32 @@ Router.get('/admin/register', (req, res) => {
 
 // Admin Sign-in
 Router.post('/admin/signin', (req, res) => {
-  const {db} = client.connect();
+  const {username, password} = req.body;
 
   if (session.has('superuser')) {
     res.redirect('/admin/dashboard');
   }
-  
-  db.connect();
-  db.query('SELECT * FROM users WHERE username=$1', [req.body.username], (err, snapshot) => {
-    if (!err) {
-      if (snapshot.rows.length < 1) {
+
+  return UserModel.findById('users', [username])
+    .then(snapshot => {
+      if (snapshot.length < 1) {
         res.end('Nama pengguna salah atau akun belum terdaftar!');
       } else {
-        for (let user of snapshot.rows) {
-          if (passwordHash.verify(req.body.password, JSON.parse(user.password))) {
-            session.set('superuser', req.body.username);
+        for (let user of snapshot) {
+          if (passwordHash.verify(password, JSON.parse(user.password))) {
+            session.set('superuser', username);
             res.redirect('/admin/dashboard');
           } else {
             res.end('kata sandi salah!');
           }
         }
       }
-    } else {
-      res.end('Akun belum terdaftar!');
-    }
-    db.end();
-  });
+    })
+    .catch(error => {
+      if (error) {
+        res.end('Akun belum terdaftar!')
+      }
+    });
 });
 // Admin Sign-up
 Router.post('/admin/signup', (req, res) => {
