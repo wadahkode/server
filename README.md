@@ -22,5 +22,16 @@ buka tab baru pada terminal:
     $ npm run hello
     # untuk menjalankan contoh blog
     $ npm run blog
+
+### Warning
+
+Ketika berjalan kalian akan mendapat pesan error seperti gambar berikut:
+
+![Screenshoot](env.error.jpg)
+
+Yang perlu kalian lakukan adalah membuat file <code>.env</code> pada direktori examples/blog jika kalian menjalankan contoh blog,
+karena framework ini baru mempunyai dukungan untuk postgresql, saya harap anda familiar dengan itu.
+
+Dan jika file <code>.env</code> sudah dibuat jalankan kembali perintah untuk menjalankan contoh.
     
 Lalu buka browser dan kunjungi: <code>http://127.0.0.1:3000</code>
