@@ -50,3 +50,8 @@
   <li>add password hash</li>
   <li>rewrite struktur source</li>
 </ul>
+
+# Versi 1.1.7
+<ul>
+  <li>Add a model to interact with the database</li>
+</ul>
