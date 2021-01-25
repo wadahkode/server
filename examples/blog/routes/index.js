@@ -2,7 +2,7 @@ const wadahkode = require('../../../'),
   Router = wadahkode().Router,
   session = require('../../../lib/session')(),
   passwordHash = require('@wadahkode/password-hash'),
-  UserModel = require('../model/User');
+  Model = require('../model/');
 
 session.start();
 
@@ -50,7 +50,7 @@ Router.post('/admin/signin', (req, res) => {
     res.redirect('/admin/dashboard');
   }
 
-  return UserModel.findById('users', [username])
+  return Model.user.findById('users', [username])
     .then(snapshot => {
       if (snapshot.length < 1) {
         res.end('Nama pengguna salah atau akun belum terdaftar!');

@@ -1,7 +1,23 @@
-const Client = require('./');
+/**
+ * User Model
+ * 
+ * @author wadahkode <mvp.dedefilaras@gmail.com>
+ * @since version 1.1.6
+ */
+let db;
 
-const findAll = (table) => Client.findAll('SELECT * FROM ' + table);
+const userModel = (client) => {
+  db = client;
+  
+  return userModel;
+};
 
-const findById = (table, params) => Client.findById('SELECT * FROM ' + table + ' WHERE username=$1', params);
+// lebih baik gunakan literal string
+// Mengambil semua data user pada database
+userModel.findAll = (table) => db.findAll(`SELECT * FROM ${table}`);
 
-module.exports = {findAll, findById};
+// Mengambil data user berdasarkan usernamenya
+userModel.findById = (table, params) => db.findById(`SELECT * FROM ${table} WHERE username=$1`, params);
+
+// export user model
+module.exports = userModel;

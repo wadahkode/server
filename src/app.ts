@@ -147,7 +147,9 @@ module.exports = {
       mimeTypes: any = {
         '.html': 'text/html',
         '.js': 'text/javascript',
+        '.min.js': 'text/javascript',
         '.css': 'text/css',
+        '.min.css': 'text/css',
         '.ico': 'image/x-icon',
         '.json': 'application/json',
         '.png': 'image/png',

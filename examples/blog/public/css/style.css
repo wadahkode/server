@@ -44,3 +44,7 @@ main {
 .mt-3 {
   margin-top: 12px;
 }*/
+.ck-editor__editable_inline {
+  min-height: 200px;
+  max-height: 200px;
+}
