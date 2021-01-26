@@ -71,46 +71,47 @@ Router.post('/admin/signin', (req, res) => {
       }
     });
 });
+
 // Admin Sign-up
 Router.post('/admin/signup', (req, res) => {
-  const {db} = client.connect();
-    date = new Date();
-  
-  if (req.body.agreement != undefined) {
-    if (req.body.password != req.body.passwordVerify) {
-      res.end('Password tidak dapat dicocokan!');
+  const {agreement, username, email, password, passwordVerify} = req.body;
+  const date = new Date().toLocaleString('en-US', {
+    timeZone: 'America/New_York'
+  });
+
+  if (session.has('superuser')) {
+    res.redirect('/admin/dashboard');
+  }
+
+  if (agreement != 'undefined') {
+    if (password != passwordVerify) {
+      res.end('Password tidak dapat dicocokan');
     } else {
-      hashedPassword = JSON.stringify(passwordHash.hash(req.body.password, salt));
+      hashedPassword = JSON.stringify(passwordHash.hash(password, salt));
     }
-    const users = {
-      get: function(query, id, callback) {
-        db.connect();
-        db.query(query, id, (err, result) => {
-          if (!err) {
-            return callback(result.rows.length >= 1 ? true : false);
-          }
-        });
-      }
-    };
-    
-    users.get('select * from users where email=$1', [req.body.email], (status) => {
-      if (status) {
-        res.end('akun sudah terdaftar!');
-      } else {
-        const query = 'INSERT INTO users(username, email, password, password_verify, created_at, updated_at) VALUES($1, $2, $3, $4, $5, $6) RETURNING *';
-        const values = [req.body.username, req.body.email, hashedPassword, hashedPassword, date, date];
-        db.query(query, values, (error, result) => {
+
+    Model.user.findById('users', [email])
+      .then(snapshot => {
+        return (snapshot.length >= 1) ? res.end('Akun sudah terdaftar, silahkan masuk untuk melanjutkan!') : Model.user.push('users', {
+          username: username,
+          email: email,
+          password: JSON.stringify(hashedPassword),
+          password_verify: JSON.stringify(hashedPassword),
+          created_at: date,
+          updated_at: date
+        }, error => {
           if (!error) {
             res.end('Akun berhasil dibuat, silahkan login untuk melanjutkan!');
           } else {
-            console.log(error.stack);
             res.end('Gagal membuat akun!');
           }
         });
-      }
-    });
-  } else {
-    res.end('Tolong terima syarat dan ketentuan yang berlaku!');
+      })
+      .catch(error => {
+        if (error) {
+          res.end('Tolong terima syarat dan ketentuan yang berlaku!');
+        }
+      });
   }
 });
 

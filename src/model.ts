@@ -11,5 +11,6 @@ Model.findAll = (query: string) => new Promise((resolve, reject) => Model.db.que
 
 Model.findById = (query: string, params: Array<string>) => new Promise((resolve, reject) => Model.db.query(query, params, (err: any, snapshot: any) => !err ? resolve(snapshot.rows) : reject(err)));
 
+Model.push = (query: string, values: Array<string>) => new Promise(resolve => Model.db.query(query, values, (err: any) => resolve(err)));
 
 module.exports = Model;
