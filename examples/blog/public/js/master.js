@@ -8,12 +8,14 @@ let sideUrl = [
   }
 ];
 
+console.log(username, container);
+
 sideUrl.forEach(url => {
   let item = document.querySelector('.' + url.admin.tutorial);
 
-  item.querySelector('button').onclick = async () => {
-    container.innerHTML = await formTutorial('/' + url.admin.tutorial.replace('-', '/'));
-    await tinymce.init({
+  item.querySelector('button').onclick = () => {
+    container.innerHTML = formTutorial('/' + url.admin.tutorial.replace('-', '/'));
+    tinymce.init({
       selector: '#editor',
       height: 300,
       plugins: 'autolink image table paste preview lists nonbreaking code emoticons',
@@ -35,7 +37,7 @@ sideUrl.forEach(url => {
 
 const formTutorial = url => /*html*/`
   <h1 class="text-lg font-bold mb-3">Buat tutorial</h1>
-  <form action="${url}" class="bg-gray-100 border py-2 px-3" method="POST" enctype="multipart/form-data">
+  <form action="${url}" class="bg-gray-100 border py-2 px-3" method="POST">
     <div>
       <legend>Judul</legend>
       <input type="text" name="judul" class="border rounded px-4 py-2 w-full focus:outline-none focus:ring-1 focus:ring-blue-300" placeholder="masukan judul"/>
@@ -51,10 +53,17 @@ const formTutorial = url => /*html*/`
     <div id="editor" name="editor" class="mt-3"></div>
     <div class="mt-3">
       <legend>Penulis</legend>
-      <input type="text" name="penulis" class="border rounded px-4 py-2" value="${username.innerHTML}" disabled/>
+      <input type="text" name="penulis" class="border rounded px-4 py-2 d-none" value="${username.innerHTML}"/>
     </div>
     <div class="mt-5">
       <button type="submit" class="border rounded bg-blue-600 p-1 w-24 text-white">Kirim</button>
     </div>
   </form>
 `;
+
+const removeTag = document.querySelectorAll('.remove-tag');
+removeTag.forEach(tag => {
+  let text = tag.innerText;
+
+  tag.innerHTML = text;
+})

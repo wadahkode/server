@@ -17,8 +17,10 @@ const Database = Client.connect();
 
 // Berapa banyak model yang mau dimuat 
 const userModel = require('./User')(Database);
+const tutorialModel = require('./Tutorial')(Database);
 
 // export model
 module.exports = {
-  user: userModel
+  user: userModel,
+  tutorial: tutorialModel
 };

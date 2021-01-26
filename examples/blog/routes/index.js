@@ -7,7 +7,10 @@ const wadahkode = require('../../../'),
 session.start();
 
 let salt = passwordHash.generateSalt(10),
-  hashedPassword = "";
+  hashedPassword = "",
+  date = new Date().toLocaleString('en-US', {
+    timeZone: 'America/New_York'
+  });
 
 Router.get('/', (req, res) => {
   res.render('index', {
@@ -75,9 +78,6 @@ Router.post('/admin/signin', (req, res) => {
 // Admin Sign-up
 Router.post('/admin/signup', (req, res) => {
   const {agreement, username, email, password, passwordVerify} = req.body;
-  const date = new Date().toLocaleString('en-US', {
-    timeZone: 'America/New_York'
-  });
 
   if (session.has('superuser')) {
     res.redirect('/admin/dashboard');
@@ -115,15 +115,42 @@ Router.post('/admin/signup', (req, res) => {
 
 // Dashboard
 Router.get('/admin/dashboard', (req, res) => {
-  return !session.has('superuser')
+  return (!session.has('superuser'))
     ? res.redirect('/admin')
-    : res.render('admin/dashboard', {
-      title: 'Blog',
-      description: 'Administrator',
-      data: [{
-        name: session.get('superuser')
-      }]
-    });
+    : Model.tutorial.findAll('tutorials')
+      .then(snapshot => {
+        res.render('admin/dashboard', {
+          title: 'Blog',
+          description: 'Administrator',
+          author: session.get('superuser'),
+          data: snapshot
+        });
+      })
+      .catch(error => console.error(error));
 });
+
+Router.post('/admin/tutorial', (req, res) => {
+  const {judul, kategori, editor, penulis} = req.body;
+
+  return Model.tutorial.findById('tutorials', [judul])
+    .then(snapshot => {
+      return (snapshot.length >= 1) ? res.end('Sudah diposting sebelumnya!') : Model.tutorial.push('tutorials', {
+        judul: judul,
+        isi: editor,
+        penulis: penulis,
+        kategori: kategori,
+        dibuat: date,
+        diupdate: date
+      }, error => {
+        if (!error) {
+          res.end('Tutorial berhasil diposting!');
+        } else {
+          console.log(error.stack);
+          res.end('Tutorial gagal diposting!');
+        }
+      });
+    })
+    .catch(error => console.error(error));
+})
 
 module.exports = Router;

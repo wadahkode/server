@@ -36,23 +36,53 @@
 
   <div class="grid grid-cols-3 gap-4 pr-10 mt-16">
     <main class="col-span-2 mt-5 mb-20 ml-72 h-screen">
-      <div>Welcome back
-        <% data.forEach(function(user) { %>
-          <b class="session-username"><%= user.name %></b>
-        <% }); %>
+      <div>Welcome back <b class="session-username"><%= author %></b></div>
+      <div class="mt-5">
+        <h1>Tutorial</h1>
+        <table class="table-auto mt-3 border border-collapse border-gray-300 rounded">
+          <thead>
+            <tr>
+              <th class="border border-collapse border-gray-300 p-2">id</th>
+              <th class="border border-collapse border-gray-300 p-2">judul</th>
+              <th class="border border-collapse border-gray-300 p-2">isi</th>
+              <th class="border border-collapse border-gray-300 p-2">penulis</th>
+              <th class="border border-collapse border-gray-300 p-2">kategori</th>
+              <th class="border border-collapse border-gray-300 p-2">dibuat</th>
+              <th class="border border-collapse border-gray-300 p-2">diupdate</th>
+              <th class="border border-collapse border-gray-300 p-2">aksi</th>
+            </tr>
+          </thead>
+          <% data.forEach(function(tutorial, key) { %>
+            <tbody>
+              <td class="border border-collapse border-gray-300 p-2"><%= key + 1 %></td>
+              <td class="border border-collapse border-gray-300 p-2"><%= tutorial.judul %></td>
+              <td class="border border-collapse border-gray-300 p-2 remove-tag"><%= tutorial.isi %></td>
+              <td class="border border-collapse border-gray-300 p-2"><%= tutorial.penulis %></td>
+              <td class="border border-collapse border-gray-300 p-2"><%= tutorial.kategori %></td>
+              <td class="border border-collapse border-gray-300 p-2"><%= tutorial.dibuat %></td>
+              <td class="border border-collapse border-gray-300 p-2"><%= tutorial.diupdate %></td>
+              <td class="border border-collapse border-gray-300 p-2">
+                <button type="button" class="border border-transparent bg-yellow-400 py-1 px-4">edit</button>
+                <button type="button" class="border border-transparent bg-red-600 py-1 px-4">hapus</button>
+              </td>
+            </tbody>
+          <% }) %>
+        </table>
       </div>
     </main>
     
     <aside class="bg-gray-700 w-64 h-screen fixed top-10 mt-6 text-white pt-4 z-auto">
-      <button type="button" class="w-64 px-4 py-2 text-left focus:outline-none focus:bg-gray-800 flex items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-speedometer2" viewBox="0 0 16 16">
-          <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
-          <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"/>
-        </svg>
-        <span class="ml-2">
-          Dashboard
-        </span>
-      </button>
+      <div>
+        <a href="/admin" class="w-64 px-4 py-2 text-left focus:outline-none focus:bg-gray-800 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-speedometer2" viewBox="0 0 16 16">
+            <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
+            <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"/>
+          </svg>
+          <span class="ml-2">
+            Dashboard
+          </span>
+        </a>
+      </div>
       <div class="admin-tutorial">
         <button type="button" class="w-64 px-4 py-2 text-left focus:outline-none focus:bg-gray-800 flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
