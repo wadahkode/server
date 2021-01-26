@@ -44,7 +44,14 @@ main {
 .mt-3 {
   margin-top: 12px;
 }*/
-.ck-editor__editable_inline {
+.ck-editor__editable_inline,
+.tox-edit-area {
   min-height: 200px;
   max-height: 200px;
+}
+
+.tox.tox-tinymce .tox-statusbar,
+.tox.tox-tinymce .tox-statusbar .tox-statusbar__resize-handle,
+.tox.tox-tinymce .tox-statusbar .tox-statusbar__branding {
+  display: none;
 }

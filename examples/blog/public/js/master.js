@@ -13,7 +13,23 @@ sideUrl.forEach(url => {
 
   item.querySelector('button').onclick = async () => {
     container.innerHTML = await formTutorial('/' + url.admin.tutorial.replace('-', '/'));
-    await ClassicEditor.create(container.querySelector('#editor')).catch( error => console.error( error ));
+    await tinymce.init({
+      selector: '#editor',
+      height: 300,
+      plugins: 'autolink image table paste preview lists nonbreaking code emoticons',
+      nonbreaking_force_tab: true,
+      toolbar: 'undo redo | styleselect | bold italic | ' +
+        'alignleft aligncenter alignright alignjustify | ' +
+        'outdent indent | numlist bullist | emoticons',
+      emoticons_append: {
+        custom_mind_explode: {
+          keywords: ['brain', 'mind', 'explode', 'blown'],
+          char: '🤯'
+        }
+      },
+      content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+      tinycomments_author: 'wadahkode official',
+    });
   };
 });
 
@@ -32,7 +48,7 @@ const formTutorial = url => /*html*/`
         <option value="programing">Programing</option>
       </select>
     </div>
-    <div id="editor" class="mt-3"></div>
+    <div id="editor" name="editor" class="mt-3"></div>
     <div class="mt-3">
       <legend>Penulis</legend>
       <input type="text" name="penulis" class="border rounded px-4 py-2" value="${username.innerHTML}" disabled/>
