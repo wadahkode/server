@@ -95,8 +95,8 @@ Router.post('/admin/signup', (req, res) => {
         return (snapshot.length >= 1) ? res.end('Akun sudah terdaftar, silahkan masuk untuk melanjutkan!') : Model.user.push('users', {
           username: username,
           email: email,
-          password: JSON.stringify(hashedPassword),
-          password_verify: JSON.stringify(hashedPassword),
+          password: hashedPassword,
+          password_verify: hashedPassword,
           created_at: date,
           updated_at: date
         }, error => {
@@ -107,11 +107,9 @@ Router.post('/admin/signup', (req, res) => {
           }
         });
       })
-      .catch(error => {
-        if (error) {
-          res.end('Tolong terima syarat dan ketentuan yang berlaku!');
-        }
-      });
+      .catch(error => console.error(error));
+  } else {
+    res.end('Tolong terima syarat dan ketentuan yang berlaku!');
   }
 });
 
@@ -121,6 +119,7 @@ Router.get('/admin/dashboard', (req, res) => {
     ? res.redirect('/admin')
     : res.render('admin/dashboard', {
       title: 'Blog',
+      description: 'Administrator',
       data: [{
         name: session.get('superuser')
       }]
