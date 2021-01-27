@@ -1,11 +1,24 @@
 /**
- * Session
+ * Session Handler
+ * 
+ * @author wadahkode <mvp.dedefilaras@gmail.com>
+ * @since version 1.1.3
  */
 const Session = function() {
   let get: any,
     has: any,
     set: any,
-    start: any;
+    destroy: any,
+    start: any,
+    unset: any;
+  
+  destroy = function() {
+    let name:string = document.cookie;
+
+    if (name != null || name != "") {
+      document.cookie = name + '; expires=Thu, 01 Jan 1980 00:00:00 UTC; path=/;';
+    }
+  },
   
   start = function() {
     return (typeof document == 'undefined')
@@ -42,12 +55,22 @@ const Session = function() {
     
     document.cookie = name + "=" + value + ";" + expires + ";path=/";
   };
+
+  unset = function(name: string) {
+    let user: string = get(name);
+
+    if (user != null || user != "") {
+      document.cookie = name + '=' + user + '; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    }
+  };
   
   return {
+    destroy,
     get,
     has,
     start,
-    set
+    set,
+    unset
   };
 };
 

@@ -2,7 +2,8 @@ const wadahkode = require('../../../'),
   Router = wadahkode().Router,
   session = require('../../../lib/session')(),
   passwordHash = require('@wadahkode/password-hash'),
-  Model = require('../model/');
+  Model = require('../model/'),
+  Memories = require('@wadahkode/memories');
 
 session.start();
 
@@ -13,9 +14,21 @@ let salt = passwordHash.generateSalt(10),
   });
 
 Router.get('/', (req, res) => {
-  res.render('index', {
-    'title': 'Blog'
-  });
+  session.unset('superuser');
+
+  Model.tutorial.findAll('tutorials')
+    .then(snapshot => {
+      snapshot.forEach(item => {
+        if (item.hasOwnProperty('dibuat')) {
+          let memories = new Memories(new Date(item.dibuat), new Date());
+          item.dibuat = memories.getMemoTime();
+        }
+      })
+      res.render('index', {
+        title: 'Blog',
+        data: snapshot
+      });
+    });
 });
 
 Router.get('/home', (req, res) => {

@@ -55,3 +55,9 @@
 <ul>
   <li>Add a model to interact with the database</li>
 </ul>
+
+# Versi 1.1.8
+<ul>
+  <li>Add unset, destroy on sesssion</li>
+  <li>Update example/blog</li>
+</ul>
