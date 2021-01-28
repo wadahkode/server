@@ -1,3 +1,15 @@
+const http = require('http');
+/**
+ * Use Type
+ * 
+ * @since version 1.1.8
+ */
+type callback = (request: typeof http.IncomingMessage, response: typeof http.ServerResponse) => void
+type Router = {
+  get: (path: string, callback: callback) => void,
+  post: (path: string, callback: callback) => void
+}
+
 const app = require('./app'),
 /**
  * Fungsi Wadahkode
@@ -17,7 +29,7 @@ wadahkode = () => {
    * 
    * @since version 1.0.0
    */
-  app.handle = (req: any, res: any) => {
+  app.handle = (req: typeof http.IncomingMessage, res: typeof http.ServerResponse) => {
     const route = app.route(req);
     
     if (req.method == 'GET') {
@@ -48,8 +60,8 @@ wadahkode = () => {
   app.register = {};
   
   app.Router = {
-    get: (path: string, callback: any) => app.get(path, callback),
-    post: (path: string, callback: any) => app.post(path, callback),
+    get: (path: string, callback: callback) => app.get(path, callback),
+    post: (path: string, callback: callback) => app.post(path, callback),
   };
   
   app.Client = require('./client');

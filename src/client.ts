@@ -6,7 +6,7 @@ const model = require('./model');
  * @author wadahkode <mvp.dedefilaras@gmail.com>
  * @since version 1.1.6
  */
-const initialize = (options: any) => dotenv.config(options);
+const initialize = (options: object|any) => dotenv.config(options);
 
 const connect = function() {
   if (process.env.DB_DRIVER == 'postgres') {

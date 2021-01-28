@@ -10,7 +10,8 @@ session.start();
 let salt = passwordHash.generateSalt(10),
   hashedPassword = "",
   date = new Date().toLocaleString('en-US', {
-    timeZone: 'America/New_York'
+    // timeZone: 'America/New_York'
+    hour12: false
   });
 
 Router.get('/', (req, res) => {
@@ -142,28 +143,82 @@ Router.get('/admin/dashboard', (req, res) => {
       .catch(error => console.error(error));
 });
 
+Router.get('/admin/tutorial/edit/:judul', (req, res) => {
+  const {judul} = req.body;
+
+  if (!session.has('superuser')) {
+    res.redirect('/admin');
+  } else {
+    Model.tutorial.findById('tutorials', [decodeURI(judul)])
+      .then(snapshot => {
+        if (snapshot.length < 1) {
+          res.end('Maaf tutorial ' + decodeURI(judul) + ' tidak dapat ditemukan!');
+        } else {
+          res.render('/admin/tutorial.edit', {
+            title: 'Blog',
+            description: 'Administrator',
+            data: snapshot
+          });
+        }
+      })
+      .catch(error => console.error(error));
+  }
+});
+
 Router.post('/admin/tutorial', (req, res) => {
   const {judul, kategori, editor, penulis} = req.body;
 
-  return Model.tutorial.findById('tutorials', [judul])
-    .then(snapshot => {
-      return (snapshot.length >= 1) ? res.end('Sudah diposting sebelumnya!') : Model.tutorial.push('tutorials', {
-        judul: judul,
-        isi: editor,
-        penulis: penulis,
-        kategori: kategori,
-        dibuat: date,
-        diupdate: date
-      }, error => {
-        if (!error) {
-          res.end('Tutorial berhasil diposting!');
-        } else {
-          console.log(error.stack);
-          res.end('Tutorial gagal diposting!');
-        }
-      });
-    })
-    .catch(error => console.error(error));
-})
+  if (!session.has('superuser')) {
+    res.redirect('/admin');
+  } else {
+    return Model.tutorial.findById('tutorials', [judul])
+      .then(snapshot => {
+        return (snapshot.length >= 1) ? res.end('Sudah diposting sebelumnya!') : Model.tutorial.push('tutorials', {
+          judul: judul,
+          isi: editor,
+          penulis: penulis,
+          kategori: kategori,
+          dibuat: date,
+          diupdate: date
+        }, error => {
+          if (!error) {
+            res.end('Tutorial berhasil diposting!');
+          } else {
+            console.log(error.stack);
+            res.end('Tutorial gagal diposting!');
+          }
+        });
+      })
+      .catch(error => console.error(error));
+  }
+});
+
+Router.post('/admin/tutorial/update', (req, res) => {
+  const {judul, kategori, editor, penulis} = req.body;
+
+  if (!session.has('superuser')) {
+    res.redirect('/admin');
+  } else {
+    return Model.tutorial.findById('tutorials', [judul])
+      .then(snapshot => {
+        return (snapshot.length >= 1) ? res.end('Sudah diposting sebelumnya!') : Model.tutorial.push('tutorials', {
+          judul: judul,
+          isi: editor,
+          penulis: penulis,
+          kategori: kategori,
+          dibuat: date,
+          diupdate: date
+        }, error => {
+          if (!error) {
+            res.end('Tutorial berhasil diupdate!');
+          } else {
+            console.log(error.stack);
+            res.end('Tutorial gagal diupdate!');
+          }
+        });
+      })
+      .catch(error => console.error(error));
+  }
+});
 
 module.exports = Router;

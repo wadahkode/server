@@ -1,18 +1,28 @@
-const {createServer} = require('http'),
+const {createServer, IncomingMessage, ServerResponse} = require('http'),
   {parse} = require('url'),
   {extname,join,resolve} = require('path'),
   {lstatSync, readFileSync} = require('fs'),
   view = require('./view'),
   qs = require('querystring');
-  
-let settings: any = {};
+
+/**
+ * Use Type
+ * 
+ * @since version 1.1.8
+ */
+type Settings = {}
+type method = (request: typeof IncomingMessage, response: typeof ServerResponse) => void
+type bodyParserCallback = (request: typeof qs) => void
+type chunk = typeof Buffer
+
+let settings = <Settings>{} || Object.create(null);
 
 module.exports = {
-  bodyParser: function(req: any, callback: any) {
+  bodyParser: function(req: typeof IncomingMessage, callback: bodyParserCallback) {
     let body: string = '';
     
     req.setEncoding('utf-8');
-    req.on('data', (chunk: any) => body += chunk);
+    req.on('data', (chunk: chunk) => body += chunk);
     req.on('data', () => callback(qs.parse(body)));
   },
   
@@ -20,7 +30,7 @@ module.exports = {
     return resolve(directory);
   },
   
-  get: function(path: string, method: any) {
+  get: function(path: string, method: method) {
     this.register[path] = this.getRouter(method);
   },
   
@@ -29,21 +39,34 @@ module.exports = {
     return server.listen.apply(server, arguments);
   },
   
-  route: function(req: any) {
-    const url: any = parse(req.url, true);
-    let handler = this.register[url.pathname];
+  route: function(req: typeof IncomingMessage) {
+    let url: typeof parse = parse(req.url, true),
+      handler: object|undefined;
     
-    return (!handler)
-      ? this.missing(req)
-      : handler;
+    let path: string[] = Object.keys(this.register).map((item) => item);
+    path.forEach(item => {
+      let explodeX: string[] = item.split('/');
+      let explodeY: string[] = req.url.split('/');
+
+      if (item.search(':') > 1 && explodeX.length == explodeY.length) {
+        let [lastIndex] = explodeX.slice(-1);
+        req.body = {};
+        req.body[lastIndex.replace(':', '')] = explodeY.slice(-1).pop();
+
+        url.pathname = item;
+      }
+    });
+    
+    handler = this.register[url.pathname];
+    return (!handler) ? this.missing(req) : handler;
   },
   
-  getRouter: function(method: any) {
+  getRouter: function(method: method) {
     const app = this;
     
     return {
       // Memproses metode GET
-      get: function(req: any, res: any) {
+      get: function(req: typeof IncomingMessage, res: typeof ServerResponse) {
         res.redirect = (url: string) => {
           res.writeHead(301, {
             'Cache-Control': 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0',
@@ -51,10 +74,10 @@ module.exports = {
           });
           res.end();
         };
-        res.render = (filename: string, data: any, options: any) => {
+        res.render = (filename: string, data: Settings, options: Settings) => {
           let viewpath: string = settings.hasOwnProperty('views') ? settings.views : resolve('views'),
             engine: string = settings.hasOwnProperty('engine') ? settings.engine : 'ejs',
-            stats: any = lstatSync(join(resolve('node_modules'), engine));
+            stats: typeof lstatSync = lstatSync(join(resolve('node_modules'), engine));
             filename = join(viewpath, filename + (settings['view extension'] || '.ejs'));
           
           const View = new view({
@@ -68,7 +91,7 @@ module.exports = {
             } : options
           });
           
-          return View.render((err: any, str: any) => {
+          return View.render((err: object|null|any, str: string|undefined|null) => {
             if (!err) {
               res.write(str);
               res.end();
@@ -86,7 +109,7 @@ module.exports = {
         return method.apply(this, [req, res]);
       },
       // Memproses metode POST
-      post: function(req: any, res: any) {
+      post: function(req: typeof IncomingMessage, res: typeof ServerResponse) {
         res.redirect = (url: string) => {
           res.writeHead(301, {
             'Cache-Control': 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0',
@@ -94,10 +117,10 @@ module.exports = {
           });
           res.end();
         };
-        res.render = (filename: string, data: any, options: any) => {
+        res.render = (filename: string, data: Settings, options: Settings) => {
           let viewpath: string = settings.hasOwnProperty('views') ? settings.views : resolve('views'),
             engine: string = settings.hasOwnProperty('engine') ? settings.engine : 'ejs',
-            stats: any = lstatSync(join(resolve('node_modules'), engine));
+            stats: typeof lstatSync = lstatSync(join(resolve('node_modules'), engine));
             filename = join(viewpath, filename + (settings['view extension'] || '.ejs'));
         
           const View = new view({
@@ -111,7 +134,7 @@ module.exports = {
             } : options
           });
           
-          return View.render((err: any, str: any) => {
+          return View.render((err: object|null|any, str: string|undefined|null) => {
             if (!err) {
               res.write(str);
               res.end();
@@ -129,7 +152,7 @@ module.exports = {
         
         if (app.requestMethod != req.method && req.method == 'POST') return app.missingRequestMethod.apply(this, [req, res]);
         
-        app.bodyParser(req, (result: any) => {
+        app.bodyParser(req, (result: bodyParserCallback) => {
           req.body = result;
           
           return method.apply(this, [req, res]);
@@ -138,13 +161,11 @@ module.exports = {
     };
   },
   
-  missing: function(req: any) {
-    const url: any = parse(req.url, true),
-      filepath: string = settings.hasOwnProperty('public')
-        ? join(settings.public, url.pathname)
-        : join(resolve('public'), url.pathname),
+  missing: function(req: typeof IncomingMessage) {
+    const url: typeof parse = parse(req.url, true),
+      filepath: string = settings.hasOwnProperty('public') ? join(settings.public, url.pathname) : join(resolve('public'), url.pathname),
       extension: string = String(extname(filepath)).toLowerCase(),
-      mimeTypes: any = {
+      mimeTypes: object|any = {
         '.html': 'text/html',
         '.js': 'text/javascript',
         '.min.js': 'text/javascript',
@@ -167,9 +188,9 @@ module.exports = {
       contentType: string = mimeTypes[extension];
     
     try {
-      let data: any = readFileSync(filepath);
+      let data: typeof readFileSync = readFileSync(filepath);
       
-      return this.getRouter((req: any, res: any) => {
+      return this.getRouter((req: typeof IncomingMessage, res: typeof ServerResponse) => {
         res.writeHead(200, {
           'Content-Type': contentType
         });
@@ -177,7 +198,7 @@ module.exports = {
         res.end();
       });
     } catch(e) {
-      return this.getRouter((req: any, res: any) => {
+      return this.getRouter((req: typeof IncomingMessage, res: typeof ServerResponse) => {
         res.writeHead(400, {
           'Content-Type': 'text/plain'
         });
@@ -187,7 +208,7 @@ module.exports = {
     }
   },
   
-  missingRequestMethod: function(req: any, res: any) {
+  missingRequestMethod: function(req: typeof IncomingMessage, res: typeof ServerResponse) {
     res.writeHead(400, {
       'Content-Type': 'text/plain'
     });
@@ -195,13 +216,13 @@ module.exports = {
     res.end();
   },
   
-  post: function(path: string, method: any) {
+  post: function(path: string, method: method) {
     this.requestMethod = String(this.post.name).toUpperCase();
     this.register[path] = this.getRouter(method);
   },
   
-  use: function(...params: any) {
-    params.reduce(function(key: string, value: any){
+  use: function(...params: object|any) {
+    params.reduce(function(key: string, value: string|object){
       settings[key] = value;
     });
   }

@@ -36,38 +36,34 @@
 
   <div class="grid grid-cols-3 gap-4 pr-10 mt-16">
     <main class="col-span-2 mt-5 mb-20 ml-72 h-screen">
-      <div>Welcome back <b class="session-username"><%= author %></b></div>
-      <div class="mt-5">
-        <h1>Tutorial</h1>
-        <table class="table-auto mt-3 border border-collapse border-gray-300 rounded">
-          <thead>
-            <tr>
-              <th class="border border-collapse border-gray-300 p-2">id</th>
-              <th class="border border-collapse border-gray-300 p-2">judul</th>
-              <th class="border border-collapse border-gray-300 p-2">isi</th>
-              <th class="border border-collapse border-gray-300 p-2">penulis</th>
-              <th class="border border-collapse border-gray-300 p-2">kategori</th>
-              <th class="border border-collapse border-gray-300 p-2">dibuat</th>
-              <th class="border border-collapse border-gray-300 p-2">diupdate</th>
-              <th class="border border-collapse border-gray-300 p-2">aksi</th>
-            </tr>
-          </thead>
+      <!-- <div>Welcome back <b class="session-username"></div> -->
+      <div class="mt-1">
+        <h1 class="mb-3">Update tutorial</h1>
           <% data.forEach(function(tutorial, key) { %>
-            <tbody>
-              <td class="border border-collapse border-gray-300 p-2"><%= key + 1 %></td>
-              <td class="border border-collapse border-gray-300 p-2"><%= tutorial.judul %></td>
-              <td class="border border-collapse border-gray-300 p-2 remove-tag"><%= tutorial.isi %></td>
-              <td class="border border-collapse border-gray-300 p-2"><%= tutorial.penulis %></td>
-              <td class="border border-collapse border-gray-300 p-2"><%= tutorial.kategori %></td>
-              <td class="border border-collapse border-gray-300 p-2"><%= tutorial.dibuat %></td>
-              <td class="border border-collapse border-gray-300 p-2"><%= tutorial.diupdate %></td>
-              <td class="border border-collapse border-gray-300 p-2">
-                <a href="/admin/tutorial/edit/<%= tutorial.judul %>" class="border border-transparent rounded bg-yellow-400 px-4 focus:outline-none">edit</a>
-                <a href="" class="border border-transparent rounded bg-red-600 px-4 focus:outline-none">hapus</a>
-              </td>
-            </tbody>
+            <form action="/admin/tutorial/update" class="bg-gray-100 border py-2 px-3" method="POST">
+              <div>
+                <legend>Judul</legend>
+                <input type="text" name="judul" class="border rounded px-4 py-2 w-full focus:outline-none focus:ring-1 focus:ring-blue-300" value="<%= tutorial.judul %>"/>
+              </div>
+              <div class="my-3">
+                <legend>Kategori</legend>
+                <select name="kategori" class="border rounded px-4 py-2 w-full focus:outline-none focus:ring-1 focus:ring-blue-300">
+                  <% if (tutorial.kategori == 'games') { %>
+                    <option value="games">Game</option>
+                  <% } %>
+                  <option value="programing">Programing</option>
+                </select>
+              </div>
+              <div id="editor" name="editor" class="mt-3 remove-tag"><%= tutorial.isi %></div>
+              <div class="mt-3">
+                <legend>Penulis</legend>
+                <input type="text" name="penulis" class="border rounded px-4 py-2 d-none" value="<%= tutorial.penulis %>"/>
+              </div>
+              <div class="mt-5">
+                <button type="submit" class="border rounded bg-red-600 p-1 w-24 text-white">Update</button>
+              </div>
+            </form>
           <% }) %>
-        </table>
       </div>
     </main>
     

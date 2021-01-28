@@ -8,8 +8,6 @@ let sideUrl = [
   }
 ];
 
-console.log(username, container);
-
 sideUrl.forEach(url => {
   let item = document.querySelector('.' + url.admin.tutorial);
 
@@ -60,6 +58,26 @@ const formTutorial = url => /*html*/`
     </div>
   </form>
 `;
+
+if (container.hasChildNodes('.editor')) {
+  tinymce.init({
+    selector: '#editor',
+    height: 300,
+    plugins: 'autolink image table paste preview lists nonbreaking code emoticons',
+    nonbreaking_force_tab: true,
+    toolbar: 'undo redo | styleselect | bold italic | ' +
+      'alignleft aligncenter alignright alignjustify | ' +
+      'outdent indent | numlist bullist | emoticons',
+    emoticons_append: {
+      custom_mind_explode: {
+        keywords: ['brain', 'mind', 'explode', 'blown'],
+        char: '🤯'
+      }
+    },
+    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+    tinycomments_author: 'wadahkode official',
+  });
+}
 
 const removeTag = document.querySelectorAll('.remove-tag');
 removeTag.forEach(tag => {
