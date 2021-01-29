@@ -9,26 +9,41 @@ session.start();
 
 let salt = passwordHash.generateSalt(10),
   hashedPassword = "",
-  date = new Date().toLocaleString('en-US', {
-    // timeZone: 'America/New_York'
-    hour12: false
-  });
+  date = new Date().toLocaleString('id-ID', {
+    timeZone: 'Asia/Jakarta'
+  }),
+  waktuIndonesia = date.replace(/\/$/g, '-').replace(/\./g, ':');
+
 
 Router.get('/', (req, res) => {
   session.unset('superuser');
 
   Model.tutorial.findAll('tutorials')
     .then(snapshot => {
-      snapshot.forEach(item => {
-        if (item.hasOwnProperty('dibuat')) {
-          let memories = new Memories(new Date(item.dibuat), new Date());
-          item.dibuat = memories.getMemoTime();
-        }
-      })
-      res.render('index', {
-        title: 'Blog',
-        data: snapshot
-      });
+      if (snapshot.length < 1) {
+        res.render('index', {
+          title: 'Blog',
+          data: false
+        });
+      } else {
+        snapshot.forEach(item => {
+          let createdAt = new Memories(new Date(item.dibuat), new Date()),
+            updateAt = new Memories(new Date(item.diupdate), new Date());
+
+          if (createdAt.getMemoTime() == updateAt.getMemoTime()) {
+            item.dibuat = createdAt.getMemoTime();
+            delete item.diupdate;
+          } else {
+            item.diupdate = updateAt.getMemoTime();
+            delete item.dibuat;
+          }
+        });
+  
+        res.render('index', {
+          title: 'Blog',
+          data: snapshot
+        });
+      }
     });
 });
 
@@ -48,14 +63,20 @@ Router.get('/about', (req, res) => {
 Router.get('/admin', (req, res) => {
   return session.has('superuser')
     ? res.redirect('/admin/dashboard')
-    : res.render('admin/index', {title: 'Blog'});
+    : res.render('admin/index', {
+      title: 'Blog',
+      message: session.has('message') ? JSON.parse(session.get('message')) : false
+    });
 });
 
 // Register GET
 Router.get('/admin/register', (req, res) => {
   return session.has('superuser')
     ? res.redirect('/admin/dashboard')
-    : res.render('admin/register', {title: 'Blog'});
+    : res.render('admin/register', {
+      title: 'Blog',
+      message: session.has('message') ? JSON.parse(session.get('message')) : false
+    });
 });
 
 
@@ -70,21 +91,33 @@ Router.post('/admin/signin', (req, res) => {
   return Model.user.findById('users', [username])
     .then(snapshot => {
       if (snapshot.length < 1) {
-        res.end('Nama pengguna salah atau akun belum terdaftar!');
+        session.flash('message', JSON.stringify({
+          backgroundStatus: 'bg-red-500',
+          value: 'Nama pengguna salah atau akun belum terdaftar!'
+        }));
+        res.redirect('/admin');
       } else {
         for (let user of snapshot) {
           if (passwordHash.verify(password, JSON.parse(user.password))) {
             session.set('superuser', username);
             res.redirect('/admin/dashboard');
           } else {
-            res.end('kata sandi salah!');
+            session.flash('message', JSON.stringify({
+              backgroundStatus: 'bg-red-500',
+              value: 'Kata sandi salah!'
+            }));
+            res.redirect('/admin');
           }
         }
       }
     })
     .catch(error => {
       if (error) {
-        res.end('Akun belum terdaftar!')
+        session.flash('message', JSON.stringify({
+          backgroundStatus: 'bg-red-500',
+          value: 'Akun belum terdaftar!'
+        }));
+        res.redirect('/admin');
       }
     });
 });
@@ -95,35 +128,60 @@ Router.post('/admin/signup', (req, res) => {
 
   if (session.has('superuser')) {
     res.redirect('/admin/dashboard');
-  }
-
-  if (agreement != 'undefined') {
-    if (password != passwordVerify) {
-      res.end('Password tidak dapat dicocokan');
-    } else {
-      hashedPassword = JSON.stringify(passwordHash.hash(password, salt));
-    }
-
-    Model.user.findById('users', [email])
-      .then(snapshot => {
-        return (snapshot.length >= 1) ? res.end('Akun sudah terdaftar, silahkan masuk untuk melanjutkan!') : Model.user.push('users', {
-          username: username,
-          email: email,
-          password: hashedPassword,
-          password_verify: hashedPassword,
-          created_at: date,
-          updated_at: date
-        }, error => {
-          if (!error) {
-            res.end('Akun berhasil dibuat, silahkan login untuk melanjutkan!');
-          } else {
-            res.end('Gagal membuat akun!');
-          }
-        });
-      })
-      .catch(error => console.error(error));
   } else {
-    res.end('Tolong terima syarat dan ketentuan yang berlaku!');
+    if (agreement != undefined) {
+      if (password != passwordVerify) {
+        session.flash('message', JSON.stringify({
+          backgroundStatus: 'bg-red-500',
+          value: 'Password tidak dapat dicocokan!'
+        }));
+        res.redirect('/admin/register');
+      } else {
+        hashedPassword = JSON.stringify(passwordHash.hash(password, salt));
+
+        Model.user.findById('users', [email])
+          .then(snapshot => {
+            if (snapshot.length >= 1) {
+              session.flash('message', JSON.stringify({
+                backgroundStatus: 'bg-red-500',
+                value: 'Akun sudah terdaftar, silahkan masuk untuk melanjutkan!'
+              }));
+              res.redirect('/admin/register');
+            } else {
+              Model.user.push('users', {
+                username: username,
+                email: email,
+                password: hashedPassword,
+                password_verify: hashedPassword,
+                status: 'pending',
+                created_at: waktuIndonesia,
+                updated_at: waktuIndonesia
+              }, error => {
+                if (!error) {
+                  session.flash('message', JSON.stringify({
+                    backgroundStatus: 'bg-green-500',
+                    value: 'Berhasil membuat akun, silahkan masuk untuk melanjutkan!'
+                  }));
+                  res.redirect('/admin/register');
+                } else {
+                  session.flash('message', JSON.stringify({
+                    backgroundStatus: 'bg-red-500',
+                    value: 'Gagal membuat akun!'
+                  }));
+                  res.redirect('/admin/register');
+                }
+              });
+            }
+          })
+          .catch(error => console.error(error));
+      }
+    } else {
+      session.flash('message', JSON.stringify({
+        backgroundStatus: 'bg-red-500',
+        value: 'Tolong terima syarat dan ketentuan yang berlaku!'
+      }));
+      res.redirect('/admin/register');
+    }
   }
 });
 
@@ -137,7 +195,8 @@ Router.get('/admin/dashboard', (req, res) => {
           title: 'Blog',
           description: 'Administrator',
           author: session.get('superuser'),
-          data: snapshot
+          data: snapshot,
+          message: session.has('message') ? JSON.parse(session.get('message')) : false
         });
       })
       .catch(error => console.error(error));
@@ -149,7 +208,7 @@ Router.get('/admin/tutorial/edit/:judul', (req, res) => {
   if (!session.has('superuser')) {
     res.redirect('/admin');
   } else {
-    Model.tutorial.findById('tutorials', [decodeURI(judul)])
+    Model.tutorial.findById('tutorials', [decodeURI(judul), 0])
       .then(snapshot => {
         if (snapshot.length < 1) {
           res.end('Maaf tutorial ' + decodeURI(judul) + ' tidak dapat ditemukan!');
@@ -165,55 +224,118 @@ Router.get('/admin/tutorial/edit/:judul', (req, res) => {
   }
 });
 
+Router.get('/admin/tutorial/delete/:judul', (req, res) => {
+  const {judul} = req.body;
+
+  if (!session.has('superuser')) {
+    res.redirect('/admin');
+  } else {
+    Model.tutorial.findById('tutorials', [decodeURI(judul), 0])
+      .then(snapshot => {
+        if (snapshot.length < 1) {
+          session.flash('message', JSON.stringify({
+            backgroundStatus: 'bg-red-500',
+            value: 'Maaf gagal memuat tutorial ' + decodeURI(judul)
+          }));
+          res.redirect('/admin/dashboard');
+        } else {
+          Model.tutorial.delete('tutorials', snapshot[0].id)
+            .then(error => {
+              if (!error) {
+                session.flash('message', JSON.stringify({
+                  backgroundStatus: 'bg-green-500',
+                  value: 'Tutorial berhasil dihapus!'
+                }));
+                res.redirect('/admin/dashboard');
+              } else {
+                session.flash('message', JSON.stringify({
+                  backgroundStatus: 'bg-red-500',
+                  value: 'Tutorial gagal dihapus!'
+                }));
+                res.redirect('/admin/dashboard');
+              }
+            });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        res.end('error');
+      })
+  }
+});
+
 Router.post('/admin/tutorial', (req, res) => {
   const {judul, kategori, editor, penulis} = req.body;
 
   if (!session.has('superuser')) {
     res.redirect('/admin');
   } else {
-    return Model.tutorial.findById('tutorials', [judul])
+    return Model.tutorial.findById('tutorials', [judul, 0])
       .then(snapshot => {
-        return (snapshot.length >= 1) ? res.end('Sudah diposting sebelumnya!') : Model.tutorial.push('tutorials', {
-          judul: judul,
-          isi: editor,
-          penulis: penulis,
-          kategori: kategori,
-          dibuat: date,
-          diupdate: date
-        }, error => {
-          if (!error) {
-            res.end('Tutorial berhasil diposting!');
-          } else {
-            console.log(error.stack);
-            res.end('Tutorial gagal diposting!');
-          }
-        });
+        if (snapshot.length >= 1) {
+          session.flash('message', JSON.stringify({
+            backgroundStatus: 'bg-red-500',
+            value: 'Sudah diposting sebelumnya!'
+          }));
+          res.redirect('/admin/dashboard');
+        } else {
+          Model.tutorial.push('tutorials', {
+            judul: judul,
+            isi: editor,
+            penulis: penulis,
+            kategori: kategori,
+            dibuat: waktuIndonesia,
+            diupdate: waktuIndonesia
+          }, error => {
+            if (!error) {
+              session.flash('message', JSON.stringify({
+                backgroundStatus: 'bg-green-500',
+                value: 'Tutorial berhasil diposting!'
+              }));
+              res.redirect('/admin/dashboard');
+            } else {
+              session.flash('message', JSON.stringify({
+                backgroundStatus: 'bg-red-500',
+                value: 'Tutorial gagal diposting!'
+              }));
+              console.log(error);
+              res.redirect('/admin/dashboard');
+            }
+          });
+        }
       })
       .catch(error => console.error(error));
   }
 });
 
 Router.post('/admin/tutorial/update', (req, res) => {
-  const {judul, kategori, editor, penulis} = req.body;
+  const {id, judul, kategori, editor, penulis} = req.body;
 
   if (!session.has('superuser')) {
     res.redirect('/admin');
   } else {
-    return Model.tutorial.findById('tutorials', [judul])
+    return Model.tutorial.findById('tutorials', [judul, parseInt(id)])
       .then(snapshot => {
-        return (snapshot.length >= 1) ? res.end('Sudah diposting sebelumnya!') : Model.tutorial.push('tutorials', {
+        return Model.tutorial.update('tutorials', {
           judul: judul,
           isi: editor,
           penulis: penulis,
           kategori: kategori,
-          dibuat: date,
-          diupdate: date
-        }, error => {
+          diupdate: waktuIndonesia
+        }, snapshot[0].id, error => {
           if (!error) {
-            res.end('Tutorial berhasil diupdate!');
+            session.flash('message', JSON.stringify({
+              backgroundStatus: 'bg-green-500',
+              value: 'Tutorial berhasil diupdate!'
+            }));
+            res.redirect('/admin/dashboard');
           } else {
             console.log(error.stack);
-            res.end('Tutorial gagal diupdate!');
+            session.flash('message', JSON.stringify({
+              backgroundStatus: 'bg-red-500',
+              value: 'Tutorial gagal diupdate!'
+            }));
+            res.redirect('/admin/dashboard');
           }
         });
       })

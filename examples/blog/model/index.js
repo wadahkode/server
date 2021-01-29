@@ -9,7 +9,7 @@ const wadahkode = require('../../../'),
  * @since version 1.1.6
  */
 Client.initialize({
-  path: wadahkode().dirname('examples/blog') + '/.env',
+  path: wadahkode().dirname('examples/blog') + '/.env.example',
 });
 
 // Menyimpan pada variabel Database ketika terkoneksi

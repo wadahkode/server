@@ -1,6 +1,13 @@
 <%- include('../partials/head') -%>
   <main class="container mx-auto w-auto lg:w-1/4 sm:w-1/2 p-3 mt-40">
-    <h1>Silahkan masuk untuk melanjutkan kehalaman utama.</h1>
+    <% if (message != false) { %>
+      <div class="<%= message.backgroundStatus %> px-4 py-2 rounded text-white mb-3">
+        <%= message.value %>
+      </div>
+    <% } %>
+    <h1>
+      Silahkan masuk untuk melanjutkan kehalaman utama.
+    </h1>
     <form class="mt-3" action="/admin/signin" method="post" accept-charset="utf-8">
       <div class="text-gray-400 focus-within:text-gray-600 ...">
         <input type="text" class="focus:ring-1 focus:ring-gray-100 focus:outline-none border border-gray-200 rounded bg-white py-2 px-3 w-full" name="username" placeholder="nama pengguna" required/>

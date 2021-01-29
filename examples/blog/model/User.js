@@ -37,10 +37,9 @@ userModel.push = (table, params, callback) => {
   tableName = tableName.slice(0, -2);
   tableValues = tableValues.slice(0, -3);
   tableKey = tableKey.slice(0, -2);
-
   const query = `INSERT INTO ${table}(${tableName}) VALUES(${tableKey}) RETURNING *`;
   const values = tableValues.split('%%%');
-
+  
   return db.push(query, values).then(error => callback(error));
 };
 

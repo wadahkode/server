@@ -60,6 +60,7 @@ const formTutorial = url => /*html*/`
 `;
 
 if (container.hasChildNodes('.editor')) {
+  // alert(true)
   tinymce.init({
     selector: '#editor',
     height: 300,

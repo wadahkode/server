@@ -52,11 +52,14 @@ module.exports = {
         let [lastIndex] = explodeX.slice(-1);
         req.body = {};
         req.body[lastIndex.replace(':', '')] = explodeY.slice(-1).pop();
+        req.body[explodeY.slice(-2)[0]] = item;
 
-        url.pathname = item;
+        if (item.search(explodeY.slice(-2)[0]) > 1) {
+          url.pathname = item;
+        }
       }
     });
-    
+
     handler = this.register[url.pathname];
     return (!handler) ? this.missing(req) : handler;
   },

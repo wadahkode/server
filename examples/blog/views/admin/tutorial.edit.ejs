@@ -41,6 +41,7 @@
         <h1 class="mb-3">Update tutorial</h1>
           <% data.forEach(function(tutorial, key) { %>
             <form action="/admin/tutorial/update" class="bg-gray-100 border py-2 px-3" method="POST">
+              <input type="hidden" name="id" value="<%= tutorial.id %>">
               <div>
                 <legend>Judul</legend>
                 <input type="text" name="judul" class="border rounded px-4 py-2 w-full focus:outline-none focus:ring-1 focus:ring-blue-300" value="<%= tutorial.judul %>"/>

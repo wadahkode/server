@@ -1,4 +1,11 @@
 /**
+ * Use Type
+ * 
+ * @since version 1.1.8
+ */
+type flash = (name: string, value: string) => void;
+
+/**
  * Session Handler
  * 
  * @author wadahkode <mvp.dedefilaras@gmail.com>
@@ -9,16 +16,35 @@ const Session = function() {
     has: any,
     set: any,
     destroy: any,
+    flash: flash,
     start: any,
     unset: any;
   
+  const date: Date = new Date();
+  date.toLocaleString('en-US', {
+    hour12: false
+  });
+
   destroy = function() {
     let name:string = document.cookie;
 
     if (name != null || name != "") {
       document.cookie = name + '; expires=Thu, 01 Jan 1980 00:00:00 UTC; path=/;';
     }
-  },
+  };
+
+  flash = (name: string, value: string) => {
+    date.setTime(date.getTime() + (1 * 1 * 200 * 100));
+    let expires: string = "expires=" + date.toUTCString();
+
+    
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
+    
+    let refresh: NodeJS.Timeout = setInterval(() => {
+      unset(name);
+      clearInterval(refresh);
+    }, 200);
+  };
   
   start = function() {
     return (typeof document == 'undefined')
@@ -48,8 +74,6 @@ const Session = function() {
   };
   
   set = function(name: string, value: string, expired: number = 1) {
-    let date = new Date();
-    
     date.setTime(date.getTime() + (expired * 24 * 60 * 60 * 1000));
     let expires = "expires="+date.toUTCString();
     
@@ -66,6 +90,7 @@ const Session = function() {
   
   return {
     destroy,
+    flash,
     get,
     has,
     start,

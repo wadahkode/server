@@ -13,4 +13,8 @@ Model.findById = (query: string, params: Array<string>) => new Promise((resolve,
 
 Model.push = (query: string, values: Array<string>) => new Promise(resolve => Model.db.query(query, values, (err: object|null|any) => resolve(err)));
 
+Model.update = (query: string) => new Promise(resolve => Model.db.query(query, (err: object|null|any) => resolve(err)));
+
+Model.delete = (query: string) => new Promise(resolve => Model.db.query(query, (err: object|null|any) => resolve(err)));
+
 module.exports = Model;
