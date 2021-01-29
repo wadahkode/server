@@ -61,3 +61,10 @@
   <li>Add unset, destroy on sesssion</li>
   <li>Update example/blog</li>
 </ul>
+
+# Versi 1.1.9
+<ul>
+  <li>Add session flash message</li>
+  <li>Fitur UPDATE AND DELETE for interact with the database</li>
+  <li>Update example/blog</li>
+</ul>
