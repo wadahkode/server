@@ -16,9 +16,8 @@ let salt = passwordHash.generateSalt(10),
 
 
 Router.get('/', (req, res) => {
-  session.unset('superuser');
-
-  Model.tutorial.findAll('tutorials')
+  // session.unset('superuser');
+  Model.tutorial.findAll('tutorials', ['id', 'DESC'], true)
     .then(snapshot => {
       if (snapshot.length < 1) {
         res.render('index', {

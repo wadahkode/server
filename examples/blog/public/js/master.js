@@ -1,4 +1,4 @@
-let container = document.querySelector('main');
+let container = document.querySelector('.main');
 let username = document.querySelector('.session-username');
 let sideUrl = [
   {
@@ -11,10 +11,10 @@ let sideUrl = [
 sideUrl.forEach(url => {
   let item = document.querySelector('.' + url.admin.tutorial);
 
-  item.querySelector('button').onclick = () => {
-    container.innerHTML = formTutorial('/' + url.admin.tutorial.replace('-', '/'));
+  item.querySelector('button').onclick = async () => {
+    container.innerHTML = await formTutorial('/' + url.admin.tutorial.replace('-', '/'));
     tinymce.init({
-      selector: '#editor',
+      selector: '.editor',
       height: 300,
       plugins: 'autolink image table paste preview lists nonbreaking code emoticons',
       nonbreaking_force_tab: true,
@@ -30,6 +30,7 @@ sideUrl.forEach(url => {
       content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
       tinycomments_author: 'wadahkode official',
     });
+    username.parentElement.style.display = "none";
   };
 });
 
@@ -48,7 +49,7 @@ const formTutorial = url => /*html*/`
         <option value="programing">Programing</option>
       </select>
     </div>
-    <div id="editor" name="editor" class="mt-3"></div>
+    <div name="editor" class="mt-3 editor"></div>
     <div class="mt-3">
       <legend>Penulis</legend>
       <input type="text" name="penulis" class="border rounded px-4 py-2 d-none" value="${username.innerHTML}"/>
@@ -62,7 +63,7 @@ const formTutorial = url => /*html*/`
 if (container.hasChildNodes('.editor')) {
   // alert(true)
   tinymce.init({
-    selector: '#editor',
+    selector: '.editor',
     height: 300,
     plugins: 'autolink image table paste preview lists nonbreaking code emoticons',
     nonbreaking_force_tab: true,

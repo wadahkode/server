@@ -12,15 +12,31 @@ const tutorialModel = (client) => {
   return tutorialModel;
 };
 
-// lebih baik gunakan literal string
-// Mengambil semua data dari database
-tutorialModel.findAll = (table) => db.findAll(`SELECT * FROM ${table}`);
+/**
+ * Mengambil semua data dari database
+ * 
+ * @param {string} table 
+ * @param {Array} sort 
+ * @param {boolean} order 
+ */
+tutorialModel.findAll = (table="", sort=[], order=false) => db.findAll(`SELECT * FROM ${table}`, sort, order);
 
-// Mengambil data berdasarkan judul atau id nya
-tutorialModel.findById = (table, params) => db.findById(`SELECT * FROM ${table} WHERE judul=$1 OR id=$2`, params);
+/**
+ * Mengambil data berdasarkan judul atau id
+ * 
+ * @param {string} table 
+ * @param {Array} params 
+ */
+tutorialModel.findById = (table="", params=[]) => db.findById(`SELECT * FROM ${table} WHERE judul=$1 OR id=$2`, params);
 
-// Menyimpan data
-tutorialModel.push = (table, params, callback) => {
+/**
+ * Menyimpan data kedalam database
+ * 
+ * @param {string} table 
+ * @param {Array} params 
+ * @param {Error} callback 
+ */
+tutorialModel.push = (table="", params=[], callback) => {
   let tableName = "",
     tableKey = "",
     tableValues = "",
@@ -44,8 +60,15 @@ tutorialModel.push = (table, params, callback) => {
   return db.push(query, values).then(error => callback(error));
 };
 
-// Update data
-tutorialModel.update = (table, params, id, callback) => {
+/**
+ * Memperbarui data dari database
+ * 
+ * @param {string} table 
+ * @param {object} params 
+ * @param {number} id 
+ * @param {Error} callback 
+ */
+tutorialModel.update = (table="", params={}, id=1, callback) => {
   let values = "",
     tableCountable = 1;
 
@@ -59,8 +82,13 @@ tutorialModel.update = (table, params, id, callback) => {
   return db.update(query).then(error => callback(error));
 };
 
-// Delete data
-tutorialModel.delete = (table, id) => db.delete(`DELETE FROM ${table} WHERE id=${id} RETURNING *`);
+/**
+ * Menghapus data dari database
+ * 
+ * @param {string} table 
+ * @param {string} id 
+ */
+tutorialModel.delete = (table="", id="") => db.delete(`DELETE FROM ${table} WHERE id=${id} RETURNING *`);
 
 // export user model
 module.exports = tutorialModel;

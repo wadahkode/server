@@ -35,16 +35,16 @@
   </nav>
 
   <div class="grid grid-cols-3 gap-4 pr-10 mt-16">
-    <main class="col-span-2 mt-5 mb-20 ml-72 h-screen">
+    <main class="col-span-3 mt-5 mb-20 ml-72 h-screen">
       <% if (message != false) { %>
         <div class="<%= message.backgroundStatus %> px-4 py-2 rounded text-white mb-3">
           <%= message.value %>
         </div>
       <% } %>
-      <div>Welcome back <b class="session-username"><%= author %></b></div>
-      <div class="mt-5">
+      <div class="mt-2 mb-3">Welcome back <b class="session-username"><%= author %></b></div>
+      <div class="main">
         <h1>Tutorial</h1>
-        <table class="table-auto mt-3 border border-collapse border-gray-300 rounded">
+        <table class="table-auto mt-3 border border-collapse rounded">
           <thead>
             <tr>
               <th class="border border-collapse border-gray-300 p-2">id</th>

@@ -68,3 +68,8 @@
   <li>Fitur UPDATE AND DELETE for interact with the database</li>
   <li>Update example/blog</li>
 </ul>
+
+# Versi 1.2.0
+<ul>
+  <li>Add options for ssl database connection in the localhost</li>
+</ul>

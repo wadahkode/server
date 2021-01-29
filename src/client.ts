@@ -8,16 +8,18 @@ const model = require('./model');
  */
 const initialize = (options: object|any) => dotenv.config(options);
 
-const connect = function() {
+/**
+ * Fungsi untuk menjalankan atau mengkoneksi
+ * 
+ * @param ssl object|any|null
+ */
+const connect = function(ssl: object|any|null) {
   if (process.env.DB_DRIVER == 'postgres') {
     const {Client} = require('pg');
     
     const newClient = new Client({
       connectionString: `${process.env.DB_DRIVER}://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
-      ssl: false
-      // ssl: {
-      //   rejectUnauthorized: false
-      // }
+      ssl
     });
 
     return new model(newClient);
@@ -26,6 +28,7 @@ const connect = function() {
   }
 };
 
+// Export
 module.exports = {
   connect,
   initialize

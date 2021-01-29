@@ -13,7 +13,12 @@ Client.initialize({
 });
 
 // Menyimpan pada variabel Database ketika terkoneksi
-const Database = Client.connect();
+const Database = Client.connect(
+  // Matikan ssl ketika berada dilocalhost
+  ssl = false
+  // Hapus komentar ini jika telah berada dihosting
+  // ssl = {rejectUnauthorized: false}
+);
 
 // Berapa banyak model yang mau dimuat 
 const userModel = require('./User')(Database);
