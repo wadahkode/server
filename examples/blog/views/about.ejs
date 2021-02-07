@@ -1,23 +1,25 @@
 <%- include('partials/head') -%>
-  <nav class="bg-gray-700 w-100 relative">
-    <div class="container py-4 flex justify-between w-100 items-center mx-auto">
-      <div>
-        <a href="/" class="text-white"><%= title %></a>
-      </div>
-      <div>
-        <ul class="flex ...">
-          <li class="px-2">
-            <a href="/home" class="text-white">Home</a>
-          </li>
-          <li class="px-2">
-            <a href="/about" class="text-white">About</a>
-          </li>
-        </ul>
-      </div>
+<nav class="bg-gray-700 w-100 relative">
+  <div
+    class="lg:container md:container md:mx-auto md:py-4 container p-4 flex justify-between w-100 items-center"
+  >
+    <div>
+      <a href="/" class="text-white"><%= title %></a>
     </div>
-  </nav>
-  
-  <main class="container mx-auto mt-5">
-    <h1>About</h1>
-  </main>
+    <div>
+      <ul class="flex ...">
+        <li class="px-2">
+          <a href="/home" class="text-white">Home</a>
+        </li>
+        <li class="px-2">
+          <a href="/about" class="text-white">About</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="md:container md:mx-auto mx-4 mt-5">
+  <h1>About</h1>
+</main>
 <%- include('partials/footer') -%>
