@@ -1,9 +1,9 @@
-const { createServer, IncomingMessage, ServerResponse } = require("http"),
-  { parse } = require("url"),
-  { extname, join, resolve } = require("path"),
-  { lstatSync, readFileSync } = require("fs"),
-  view = require("./view"),
-  qs = require("querystring");
+const { createServer, IncomingMessage, ServerResponse } = require('http'),
+  { parse } = require('url'),
+  { extname, join, resolve } = require('path'),
+  { lstatSync, readFileSync } = require('fs'),
+  view = require('./view'),
+  qs = require('querystring');
 
 /**
  * Use Type
@@ -25,11 +25,11 @@ module.exports = {
     req: typeof IncomingMessage,
     callback: bodyParserCallback
   ) {
-    let body: string = "";
+    let body: string = '';
 
-    req.setEncoding("utf-8");
-    req.on("data", (chunk: chunk) => (body += chunk));
-    req.on("data", () => callback(qs.parse(body)));
+    req.setEncoding('utf-8');
+    req.on('data', (chunk: chunk) => (body += chunk));
+    req.on('data', () => callback(qs.parse(body)));
   },
 
   dirname: function (directory: string) {
@@ -51,13 +51,13 @@ module.exports = {
 
     let path: string[] = Object.keys(this.register).map((item) => item);
     path.forEach((item) => {
-      let explodeX: string[] = item.split("/");
-      let explodeY: string[] = req.url.split("/");
+      let explodeX: string[] = item.split('/');
+      let explodeY: string[] = req.url.split('/');
 
-      if (item.search(":") > 1 && explodeX.length == explodeY.length) {
+      if (item.search(':') > 1 && explodeX.length == explodeY.length) {
         let [lastIndex] = explodeX.slice(-1);
         req.body = {};
-        req.body[lastIndex.replace(":", "")] = explodeY.slice(-1).pop();
+        req.body[lastIndex.replace(':', '')] = explodeY.slice(-1).pop();
         req.body[explodeY.slice(-2)[0]] = item;
 
         if (item.search(explodeY.slice(-2)[0]) > 1) {
@@ -78,25 +78,25 @@ module.exports = {
       get: function (req: typeof IncomingMessage, res: typeof ServerResponse) {
         res.redirect = (url: string) => {
           res.writeHead(301, {
-            "Cache-Control":
-              "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0",
+            'Cache-Control':
+              'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0',
             Location: url,
           });
           res.end();
         };
         res.render = (filename: string, data: Settings, options: Settings) => {
-          let viewpath: string = settings.hasOwnProperty("views")
+          let viewpath: string = settings.hasOwnProperty('views')
               ? settings.views
-              : resolve("views"),
-            engine: string = settings.hasOwnProperty("engine")
+              : resolve('views'),
+            engine: string = settings.hasOwnProperty('engine')
               ? settings.engine
-              : "ejs",
+              : 'ejs',
             stats: typeof lstatSync = lstatSync(
-              join(resolve("node_modules"), engine)
+              join(resolve('node_modules'), engine)
             );
           filename = join(
             viewpath,
-            filename + (settings["view extension"] || ".ejs")
+            filename + (settings['view extension'] || '.ejs')
           );
 
           const View = new view({
@@ -119,8 +119,8 @@ module.exports = {
                 res.write(str);
                 res.end();
               } else {
-                if (err.code == "ENOENT") {
-                  res.write(filename + " tidak dapat ditemukan!");
+                if (err.code == 'ENOENT') {
+                  res.write(filename + ' tidak dapat ditemukan!');
                   res.end();
                 } else {
                   res.write(err.toString());
@@ -136,25 +136,25 @@ module.exports = {
       post: function (req: typeof IncomingMessage, res: typeof ServerResponse) {
         res.redirect = (url: string) => {
           res.writeHead(301, {
-            "Cache-Control":
-              "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0",
+            'Cache-Control':
+              'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0',
             Location: url,
           });
           res.end();
         };
         res.render = (filename: string, data: Settings, options: Settings) => {
-          let viewpath: string = settings.hasOwnProperty("views")
+          let viewpath: string = settings.hasOwnProperty('views')
               ? settings.views
-              : resolve("views"),
-            engine: string = settings.hasOwnProperty("engine")
+              : resolve('views'),
+            engine: string = settings.hasOwnProperty('engine')
               ? settings.engine
-              : "ejs",
+              : 'ejs',
             stats: typeof lstatSync = lstatSync(
-              join(resolve("node_modules"), engine)
+              join(resolve('node_modules'), engine)
             );
           filename = join(
             viewpath,
-            filename + (settings["view extension"] || ".ejs")
+            filename + (settings['view extension'] || '.ejs')
           );
 
           const View = new view({
@@ -177,8 +177,8 @@ module.exports = {
                 res.write(str);
                 res.end();
               } else {
-                if (err.code == "ENOENT") {
-                  res.write(filename + " tidak dapat ditemukan!");
+                if (err.code == 'ENOENT') {
+                  res.write(filename + ' tidak dapat ditemukan!');
                   res.end();
                 } else {
                   res.write(err.toString());
@@ -203,29 +203,29 @@ module.exports = {
 
   missing: function (req: typeof IncomingMessage) {
     const url: typeof parse = parse(req.url, true),
-      filepath: string = settings.hasOwnProperty("public")
+      filepath: string = settings.hasOwnProperty('public')
         ? join(settings.public, url.pathname)
-        : join(resolve("public"), url.pathname),
+        : join(resolve('public'), url.pathname),
       extension: string = String(extname(filepath)).toLowerCase(),
       mimeTypes: object | any = {
-        ".html": "text/html",
-        ".js": "text/javascript",
-        ".min.js": "text/javascript",
-        ".css": "text/css",
-        ".min.css": "text/css",
-        ".ico": "image/x-icon",
-        ".json": "application/json",
-        ".png": "image/png",
-        ".jpg": "image/jpg",
-        ".gif": "image/gif",
-        ".svg": "image/svg+xml",
-        ".wav": "audio/wav",
-        ".mp4": "video/mp4",
-        ".woff": "application/font-woff",
-        ".ttf": "application/font-ttf",
-        ".eot": "application/vnd.ms-fontobject",
-        ".otf": "application/font-otf",
-        ".wasm": "application/wasm",
+        '.html': 'text/html',
+        '.js': 'text/javascript',
+        '.min.js': 'text/javascript',
+        '.css': 'text/css',
+        '.min.css': 'text/css',
+        '.ico': 'image/x-icon',
+        '.json': 'application/json',
+        '.png': 'image/png',
+        '.jpg': 'image/jpg',
+        '.gif': 'image/gif',
+        '.svg': 'image/svg+xml',
+        '.wav': 'audio/wav',
+        '.mp4': 'video/mp4',
+        '.woff': 'application/font-woff',
+        '.ttf': 'application/font-ttf',
+        '.eot': 'application/vnd.ms-fontobject',
+        '.otf': 'application/font-otf',
+        '.wasm': 'application/wasm',
       },
       contentType: string = mimeTypes[extension];
 
@@ -235,7 +235,7 @@ module.exports = {
       return this.getRouter(
         (req: typeof IncomingMessage, res: typeof ServerResponse) => {
           res.writeHead(200, {
-            "Content-Type": contentType,
+            'Content-Type': contentType,
           });
           res.write(data);
           res.end();
@@ -245,10 +245,10 @@ module.exports = {
       return this.getRouter(
         (req: typeof IncomingMessage, res: typeof ServerResponse) => {
           res.writeHead(400, {
-            "Content-Type": "text/plain",
+            'Content-Type': 'text/plain',
           });
           res.write(
-            "[" + req.method + "] No route registered for " + url.pathname
+            '[' + req.method + '] No route registered for ' + url.pathname
           );
           res.end();
         }
@@ -261,12 +261,12 @@ module.exports = {
     res: typeof ServerResponse
   ) {
     res.writeHead(400, {
-      "Content-Type": "text/plain",
+      'Content-Type': 'text/plain',
     });
     res.write(
-      "Router [" +
+      'Router [' +
         req.method +
-        "] diperlukan untuk menangani permintaan url: " +
+        '] diperlukan untuk menangani permintaan url: ' +
         req.url
     );
     res.end();
@@ -278,8 +278,8 @@ module.exports = {
   },
 
   use: function (...params: object | any) {
-    params.reduce(function (key: string, value: string | object) {
-      settings[key] = value;
-    });
+    params.reduce(
+      (key: string, value: string | object) => (settings[key] = value)
+    );
   },
 };
