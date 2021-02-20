@@ -1,21 +1,23 @@
 /**
- * Model
+ * Postgres
  *
  * @author wadahkode <mvp.dedefilaras@gmail.com>
  * @since version 1.1.8
  */
-let Model = Object.create(null);
+let Postgres = Object.create(null);
+let date = new Date(),
+  seconds: number = date.getMilliseconds();
 
 /**
  * Constructor or Function
  *
- * @return Model
+ * @return Postgres
  */
-Model = (client: object | any) => {
-  Model.db = client;
-  Model.db.connect();
+Postgres = (client: object | any) => {
+  Postgres.db = client;
+  Postgres.db.connect();
 
-  return Model;
+  return Postgres;
 };
 
 /**
@@ -25,14 +27,11 @@ Model = (client: object | any) => {
  * @param sort array|number|any
  * @param prepend boolean
  */
-Model.findAll = (
+Postgres.findAll = (
   query: string,
   sort: Array<string | number | any>,
   prepend: boolean = false
 ) => {
-  const date = new Date(),
-    seconds: number = date.getMilliseconds();
-
   if (prepend && sort.length > 1) {
     let orderBy: string | undefined,
       limit: number | undefined = 1,
@@ -52,17 +51,21 @@ Model.findAll = (
     }
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        Model.db.query(
+        Postgres.db.query(
           query,
           (err: object | null | any, snapshot: object | any) =>
-            !err ? resolve(snapshot.rows) : reject(err)
+            err != null
+              ? reject(true)
+              : snapshot.rows.length >= 1
+              ? resolve(snapshot.rows)
+              : reject(true)
         );
       }, seconds);
     });
   }
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      Model.db.query(
+      Postgres.db.query(
         query,
         (err: object | null | any, snapshot: object | any) =>
           !err ? resolve(snapshot.rows) : reject(err)
@@ -77,15 +80,24 @@ Model.findAll = (
  * @param query string
  * @param params array
  */
-Model.findById = (query: string, params: Array<string>) =>
-  new Promise((resolve, reject) =>
-    Model.db.query(
-      query,
-      params,
-      (err: object | null | any, snapshot: object | any) =>
-        !err ? resolve(snapshot.rows) : reject(err)
-    )
-  );
+Postgres.findById = (query: string, params: Array<string>) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(
+      () =>
+        Postgres.db.query(
+          query,
+          params,
+          (err: object | null | any, snapshot: object | any) =>
+            err != null
+              ? reject(true)
+              : snapshot.rows.length >= 1
+              ? resolve(snapshot.rows)
+              : reject(true)
+        ),
+      seconds
+    );
+  });
+};
 
 /**
  * Menyimpan data kedalam database
@@ -93,9 +105,9 @@ Model.findById = (query: string, params: Array<string>) =>
  * @param query string
  * @param values array
  */
-Model.push = (query: string, values: Array<string>) =>
+Postgres.push = (query: string, values: Array<string>) =>
   new Promise((resolve) =>
-    Model.db.query(query, values, (err: object | null | any) => resolve(err))
+    Postgres.db.query(query, values, (err: object | null | any) => resolve(err))
   );
 
 /**
@@ -103,9 +115,9 @@ Model.push = (query: string, values: Array<string>) =>
  *
  * @param query string
  */
-Model.update = (query: string) =>
+Postgres.update = (query: string) =>
   new Promise((resolve) =>
-    Model.db.query(query, (err: object | null | any) => resolve(err))
+    Postgres.db.query(query, (err: object | null | any) => resolve(err))
   );
 
 /**
@@ -113,10 +125,10 @@ Model.update = (query: string) =>
  *
  * @param query string
  */
-Model.delete = (query: string) =>
+Postgres.delete = (query: string) =>
   new Promise((resolve) =>
-    Model.db.query(query, (err: object | null | any) => resolve(err))
+    Postgres.db.query(query, (err: object | null | any) => resolve(err))
   );
 
-// Export Model
-module.exports = Model;
+// Export Postgres
+module.exports = Postgres;

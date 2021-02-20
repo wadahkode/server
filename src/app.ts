@@ -130,6 +130,14 @@ module.exports = {
             }
           );
         };
+
+        let body = '';
+
+        req.setEncoding('utf-8');
+        req.on('data', (chunk: chunk) => (body += chunk));
+        req.on('data', () => {
+          req.body = qs.parse(body);
+        });
         return method.apply(this, [req, res]);
       },
       // Memproses metode POST
