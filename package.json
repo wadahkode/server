@@ -33,7 +33,7 @@
     "@wadahkode/password-hash": "^1.1.2",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
-    "firebase": "^8.2.8",
+    "firebase": "^10.2.0",
     "jsdom": "^16.4.0",
     "jsdom-global": "^3.0.2",
     "pg": "^8.5.1",
